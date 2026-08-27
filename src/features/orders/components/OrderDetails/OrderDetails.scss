@@ -1,0 +1,148 @@
+.order-details {
+  flex: 1;
+
+  min-width: 0;
+  padding: 24px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8ec;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 6%);
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid #eceff1;
+  }
+
+  &__title {
+    margin: 0 0 4px;
+
+    font-size: 22px;
+    font-weight: 600;
+    color: #37474f;
+  }
+
+  &__description {
+    margin: 0;
+
+    font-size: 14px;
+    color: #90a4ae;
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+    padding: 0;
+
+    font-size: 28px;
+    line-height: 1;
+    color: #78909c;
+
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+
+    &:hover {
+      color: #455a64;
+      background: #f1f3f4;
+    }
+  }
+
+  &__summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    margin-bottom: 28px;
+
+    gap: 20px;
+  }
+
+  &__summary-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    color: #455a64;
+  }
+
+  &__label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #90a4ae;
+  }
+
+  &__total {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__products-title {
+    margin: 0 0 16px;
+
+    font-size: 18px;
+    font-weight: 600;
+    color: #455a64;
+  }
+
+  &__products-list {
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+
+    gap: 8px;
+  }
+
+  &__product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 14px 16px;
+
+    background: #f8fafb;
+    border: 1px solid #eceff1;
+    border-radius: 5px;
+  }
+
+  &__product-info,
+  &__product-price {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+  }
+
+  &__product-info span,
+  &__product-price span {
+    font-size: 13px;
+    color: #78909c;
+  }
+
+  &__empty {
+    margin: 0;
+
+    color: #90a4ae;
+  }
+}

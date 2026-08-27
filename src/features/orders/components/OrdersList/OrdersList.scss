@@ -1,0 +1,29 @@
+.orders-view {
+  display: flex;
+  align-items: flex-start;
+
+  width: 100%;
+  overflow: hidden;
+
+  gap: 24px;
+}
+
+.orders-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
+
+  gap: 12px;
+
+  transition:
+    flex 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &--compact {
+    flex: 0 0 48%;
+    max-width: 48%;
+  }
+}
