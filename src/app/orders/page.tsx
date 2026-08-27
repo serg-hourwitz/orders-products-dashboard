@@ -1,5 +1,6 @@
 'use client';
 
+import { DeleteOrderModal } from '@/features/orders/components/DeleteOrderModal/DeleteOrderModal';
 import { OrdersList } from '@/features/orders/components/OrdersList/OrdersList';
 
 import './OrdersPage.scss';
@@ -12,6 +13,7 @@ const OrdersPage = () => {
       </div>
 
       <OrdersList />
+      <DeleteOrderModal />
     </section>
   );
 };

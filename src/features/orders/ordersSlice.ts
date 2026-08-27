@@ -6,11 +6,13 @@ import type { Order } from '@/types/order';
 interface OrdersState {
   items: Order[];
   selectedOrderId: number | null;
+  orderIdPendingDelete: number | null;
 }
 
 const initialState: OrdersState = {
   items: orders,
   selectedOrderId: null,
+  orderIdPendingDelete: null,
 };
 
 const ordersSlice = createSlice({
@@ -31,11 +33,26 @@ const ordersSlice = createSlice({
       if (state.selectedOrderId === action.payload) {
         state.selectedOrderId = null;
       }
+
+      state.orderIdPendingDelete = null;
+    },
+
+    openDeleteOrderModal: (state, action: PayloadAction<number>) => {
+      state.orderIdPendingDelete = action.payload;
+    },
+
+    closeDeleteOrderModal: (state) => {
+      state.orderIdPendingDelete = null;
     },
   },
 });
 
-export const { selectOrder, clearSelectedOrder, deleteOrder } =
-  ordersSlice.actions;
+export const {
+  selectOrder,
+  clearSelectedOrder,
+  openDeleteOrderModal,
+  closeDeleteOrderModal,
+  deleteOrder,
+} = ordersSlice.actions;
 
 export default ordersSlice.reducer;

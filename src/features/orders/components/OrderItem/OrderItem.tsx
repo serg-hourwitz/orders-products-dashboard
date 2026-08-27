@@ -7,12 +7,13 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { formatLongDate, formatShortDate } from '@/utils/formatDate';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
+import { openDeleteOrderModal, selectOrder } from '../../ordersSlice';
+
 import {
   selectOrderProductsCount,
   selectOrderTotalByCurrency,
   selectSelectedOrderId,
 } from '../../ordersSelectors';
-import { selectOrder } from '../../ordersSlice';
 
 import './OrderItem.scss';
 
@@ -43,12 +44,10 @@ export const OrderItem = ({ order }: OrderItemProps) => {
     dispatch(selectOrder(order.id));
   };
 
-  const handleDeleteClick = (
-    event: MouseEvent<HTMLButtonElement>,
-  ) => {
+  const handleDeleteClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
-    // Modal підключимо наступним кроком.
+    dispatch(openDeleteOrderModal(order.id));
   };
 
   return (

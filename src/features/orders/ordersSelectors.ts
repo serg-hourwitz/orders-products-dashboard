@@ -29,3 +29,12 @@ export const selectOrderTotalByCurrency =
 
         return total + (price?.value ?? 0);
       }, 0);
+
+export const selectOrderIdPendingDelete = (state: RootState) =>
+  state.orders.orderIdPendingDelete;
+
+export const selectOrderPendingDelete = (state: RootState) => {
+  const orderId = state.orders.orderIdPendingDelete;
+
+  return state.orders.items.find((order) => order.id === orderId) ?? null;
+};
