@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { useActiveSessions } from '@/hooks/useActiveSessions';
+
 import './TopMenu.scss';
 
 const getCurrentDate = () => new Date();
@@ -35,6 +37,10 @@ export const TopMenu = () => {
       }).format(currentDate)
     : '--:--:--';
 
+
+  const { count: activeSessions, connected: socketConnected } =
+    useActiveSessions();
+
   return (
     <header className="top-menu">
       <div className="top-menu__brand">
@@ -48,8 +54,18 @@ export const TopMenu = () => {
         </div>
 
         <div className="top-menu__sessions">
+          <span
+            className={`top-menu__connection ${
+              socketConnected ? 'top-menu__connection--online' : ''
+            }`}
+            aria-hidden="true"
+          />
+
           <span className="top-menu__sessions-label">Active sessions</span>
-          <span className="top-menu__sessions-count">—</span>
+
+          <span className="top-menu__sessions-count">
+            {activeSessions ?? '—'}
+          </span>
         </div>
       </div>
     </header>

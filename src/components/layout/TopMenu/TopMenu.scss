@@ -71,4 +71,18 @@
     background: #8bc34a;
     border-radius: 50%;
   }
+
+  &__connection {
+    width: 8px;
+    height: 8px;
+
+    background: #ef5350;
+    border-radius: 50%;
+
+    transition: background-color 0.2s ease;
+
+    &--online {
+      background: #8bc34a;
+    }
+  }
 }
