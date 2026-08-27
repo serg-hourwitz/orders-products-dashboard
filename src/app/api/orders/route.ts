@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { orders } from '@/data/orders';
+import { getOrdersStore } from '@/data/store';
 
 export const GET = () => {
-  return NextResponse.json(orders);
+  return NextResponse.json(getOrdersStore());
 };

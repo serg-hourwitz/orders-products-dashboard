@@ -5,14 +5,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 import {
+  selectOrderDeleting,
   selectOrderIdPendingDelete,
   selectOrderPendingDelete,
 } from '../../ordersSelectors';
-import {
-  closeDeleteOrderModal,
-  deleteOrder,
-} from '../../ordersSlice';
-import { deleteProductsByOrderId } from '@/features/products/productsSlice';
+
+import { closeDeleteOrderModal, deleteOrder } from '../../ordersSlice';
+
+import { fetchProducts } from '@/features/products/productsSlice';
 
 import './DeleteOrderModal.scss';
 
@@ -26,13 +26,19 @@ export const DeleteOrderModal = () => {
     dispatch(closeDeleteOrderModal());
   };
 
-  const handleConfirm = () => {
+  const deleting = useAppSelector(selectOrderDeleting);
+
+  const handleConfirm = async () => {
     if (orderId === null) {
       return;
     }
 
-    dispatch(deleteProductsByOrderId(orderId));
-    dispatch(deleteOrder(orderId));
+    try {
+      await dispatch(deleteOrder(orderId)).unwrap();
+      await dispatch(fetchProducts()).unwrap();
+    } catch {
+      // Error already stored in Redux.
+    }
   };
 
   return (
@@ -72,10 +78,7 @@ export const DeleteOrderModal = () => {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="delete-order-modal__header">
-              <h2
-                id="delete-order-title"
-                className="delete-order-modal__title"
-              >
+              <h2 id="delete-order-title" className="delete-order-modal__title">
                 Delete order
               </h2>
 
@@ -91,8 +94,7 @@ export const DeleteOrderModal = () => {
 
             <div className="delete-order-modal__body">
               <p className="delete-order-modal__message">
-                Are you sure you want to delete{' '}
-                <strong>{order.title}</strong>?
+                Are you sure you want to delete <strong>{order.title}</strong>?
               </p>
 
               <p className="delete-order-modal__warning">
@@ -112,9 +114,10 @@ export const DeleteOrderModal = () => {
               <button
                 type="button"
                 className="btn btn-danger"
+                disabled={deleting}
                 onClick={handleConfirm}
               >
-                Delete
+                {deleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </motion.div>

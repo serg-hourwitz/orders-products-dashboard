@@ -38,8 +38,7 @@ export const selectOrderPendingDelete = (state: RootState) => {
 
   return state.orders.items.find((order) => order.id === orderId) ?? null;
 };
-export const selectOrdersLoading = (state: RootState) =>
-  state.orders.loading;
+export const selectOrdersLoading = (state: RootState) => state.orders.loading;
 
-export const selectOrdersError = (state: RootState) =>
-  state.orders.error;
+export const selectOrdersError = (state: RootState) => state.orders.error;
+export const selectOrderDeleting = (state: RootState) => state.orders.deleting;

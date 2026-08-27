@@ -4,7 +4,7 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
-import { getOrders } from '@/services/ordersApi';
+import { getOrders, removeOrder } from '@/services/ordersApi';
 import type { Order } from '@/types/order';
 
 interface OrdersState {
@@ -12,6 +12,7 @@ interface OrdersState {
   selectedOrderId: number | null;
   orderIdPendingDelete: number | null;
   loading: boolean;
+  deleting: boolean;
   error: string | null;
 }
 
@@ -20,6 +21,7 @@ const initialState: OrdersState = {
   selectedOrderId: null,
   orderIdPendingDelete: null,
   loading: false,
+  deleting: false,
   error: null,
 };
 
@@ -32,6 +34,20 @@ export const fetchOrders = createAsyncThunk<
     return await getOrders();
   } catch {
     return rejectWithValue('Failed to load orders');
+  }
+});
+
+export const deleteOrder = createAsyncThunk<
+  number,
+  number,
+  { rejectValue: string }
+>('orders/deleteOrder', async (orderId, { rejectWithValue }) => {
+  try {
+    await removeOrder(orderId);
+
+    return orderId;
+  } catch {
+    return rejectWithValue('Failed to delete order');
   }
 });
 
@@ -54,16 +70,6 @@ const ordersSlice = createSlice({
     closeDeleteOrderModal: (state) => {
       state.orderIdPendingDelete = null;
     },
-
-    deleteOrder: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((order) => order.id !== action.payload);
-
-      if (state.selectedOrderId === action.payload) {
-        state.selectedOrderId = null;
-      }
-
-      state.orderIdPendingDelete = null;
-    },
   },
 
   extraReducers: (builder) => {
@@ -79,6 +85,27 @@ const ordersSlice = createSlice({
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? 'Failed to load orders';
+      })
+      .addCase(deleteOrder.pending, (state) => {
+        state.deleting = true;
+        state.error = null;
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.deleting = false;
+
+        state.items = state.items.filter(
+          (order) => order.id !== action.payload,
+        );
+
+        if (state.selectedOrderId === action.payload) {
+          state.selectedOrderId = null;
+        }
+
+        state.orderIdPendingDelete = null;
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.deleting = false;
+        state.error = action.payload ?? 'Failed to delete order';
       });
   },
 });
@@ -88,7 +115,5 @@ export const {
   clearSelectedOrder,
   openDeleteOrderModal,
   closeDeleteOrderModal,
-  deleteOrder,
 } = ordersSlice.actions;
-
 export default ordersSlice.reducer;
