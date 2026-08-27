@@ -4,7 +4,12 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
-import { getOrders, removeOrder } from '@/services/ordersApi';
+import {
+  createOrder,
+  getOrders,
+  removeOrder,
+  type CreateOrderPayload,
+} from '@/services/ordersApi';
 import type { Order } from '@/types/order';
 
 interface OrdersState {
@@ -12,6 +17,7 @@ interface OrdersState {
   selectedOrderId: number | null;
   orderIdPendingDelete: number | null;
   loading: boolean;
+  creating: boolean;
   deleting: boolean;
   error: string | null;
 }
@@ -21,6 +27,7 @@ const initialState: OrdersState = {
   selectedOrderId: null,
   orderIdPendingDelete: null,
   loading: false,
+  creating: false,
   deleting: false,
   error: null,
 };
@@ -48,6 +55,18 @@ export const deleteOrder = createAsyncThunk<
     return orderId;
   } catch {
     return rejectWithValue('Failed to delete order');
+  }
+});
+
+export const addOrder = createAsyncThunk<
+  Order,
+  CreateOrderPayload,
+  { rejectValue: string }
+>('orders/addOrder', async (payload, { rejectWithValue }) => {
+  try {
+    return await createOrder(payload);
+  } catch {
+    return rejectWithValue('Failed to create order');
   }
 });
 
@@ -106,6 +125,18 @@ const ordersSlice = createSlice({
       .addCase(deleteOrder.rejected, (state, action) => {
         state.deleting = false;
         state.error = action.payload ?? 'Failed to delete order';
+      })
+      .addCase(addOrder.pending, (state) => {
+        state.creating = true;
+        state.error = null;
+      })
+      .addCase(addOrder.fulfilled, (state, action) => {
+        state.creating = false;
+        state.items.push(action.payload);
+      })
+      .addCase(addOrder.rejected, (state, action) => {
+        state.creating = false;
+        state.error = action.payload ?? 'Failed to create order';
       });
   },
 });

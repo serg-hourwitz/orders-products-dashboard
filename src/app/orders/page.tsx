@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { DeleteOrderModal } from '@/features/orders/components/DeleteOrderModal/DeleteOrderModal';
 import { OrdersList } from '@/features/orders/components/OrdersList/OrdersList';
@@ -15,6 +15,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { selectOrders } from '@/features/orders/ordersSelectors';
 import { selectProducts } from '@/features/products/productsSelectors';
 
+import { CreateOrderModal } from '@/features/orders/components/CreateOrderModal/CreateOrderModal';
+
 import './OrdersPage.scss';
 
 const OrdersPage = () => {
@@ -25,6 +27,8 @@ const OrdersPage = () => {
 
   const orders = useAppSelector(selectOrders);
   const products = useAppSelector(selectProducts);
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     if (products.length === 0) {
@@ -56,10 +60,22 @@ const OrdersPage = () => {
     <section className="orders-page">
       <div className="orders-page__header">
         <h1 className="orders-page__title">Orders</h1>
+
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={() => setIsCreateModalOpen(true)}
+        >
+          Add order
+        </button>
       </div>
 
       <OrdersList />
       <DeleteOrderModal />
+      <CreateOrderModal
+        open={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
     </section>
   );
 };

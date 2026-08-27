@@ -7,6 +7,20 @@ interface DeleteOrderResponse {
   message: string;
 }
 
+export interface CreateOrderPayload {
+  title: string;
+  description: string;
+  date: string;
+}
+
+export const createOrder = async (
+  payload: CreateOrderPayload,
+): Promise<Order> => {
+  const response = await api.post<Order>('/orders', payload);
+
+  return response.data;
+};
+
 export const getOrders = async (): Promise<Order[]> => {
   const response = await api.get<Order[]>('/orders');
 

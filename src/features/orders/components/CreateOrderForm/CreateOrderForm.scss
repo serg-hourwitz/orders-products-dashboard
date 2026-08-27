@@ -1,0 +1,24 @@
+.create-order-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #455a64;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

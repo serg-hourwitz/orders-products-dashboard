@@ -24,3 +24,19 @@ export const deleteOrderFromStore = (orderId: number) => {
 
   return true;
 };
+
+export const createOrderInStore = (order: Omit<Order, 'id'>): Order => {
+  const nextId =
+    ordersStore.length > 0
+      ? Math.max(...ordersStore.map((item) => item.id)) + 1
+      : 1;
+
+  const newOrder: Order = {
+    id: nextId,
+    ...order,
+  };
+
+  ordersStore.push(newOrder);
+
+  return newOrder;
+};
