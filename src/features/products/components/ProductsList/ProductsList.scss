@@ -1,0 +1,17 @@
+.products-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  &__empty {
+    padding: 40px;
+
+    text-align: center;
+    color: #90a4ae;
+
+    background: #ffffff;
+    border: 1px solid #e2e8ec;
+    border-radius: 6px;
+  }
+}
