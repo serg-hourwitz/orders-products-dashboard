@@ -1,17 +1,37 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 
-import { products } from '@/data/products';
+import { getProducts } from '@/services/productsApi';
 import type { Product } from '@/types/product';
 
 interface ProductsState {
   items: Product[];
   selectedType: string;
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: ProductsState = {
-  items: products,
+  items: [],
   selectedType: 'all',
+  loading: false,
+  error: null,
 };
+
+export const fetchProducts = createAsyncThunk<
+  Product[],
+  void,
+  { rejectValue: string }
+>('products/fetchProducts', async (_, { rejectWithValue }) => {
+  try {
+    return await getProducts();
+  } catch {
+    return rejectWithValue('Failed to load products');
+  }
+});
 
 const productsSlice = createSlice({
   name: 'products',
@@ -26,6 +46,22 @@ const productsSlice = createSlice({
         (product) => product.order !== action.payload,
       );
     },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? 'Failed to load products';
+      });
   },
 });
 

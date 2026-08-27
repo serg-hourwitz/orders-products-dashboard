@@ -22,3 +22,7 @@ export const selectFilteredProducts = (state: RootState) => {
 export const selectOrderTitleById = (orderId: number) => (state: RootState) =>
   state.orders.items.find((order) => order.id === orderId)?.title ??
   'Unknown order';
+export const selectProductsLoading = (state: RootState) =>
+  state.products.loading;
+
+export const selectProductsError = (state: RootState) => state.products.error;
