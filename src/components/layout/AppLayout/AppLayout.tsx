@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { NavigationMenu } from '@/components/layout/NavigationMenu/NavigationMenu';
+import { RouteTransition } from '@/components/layout/RouteTransition/RouteTransition';
 import { TopMenu } from '@/components/layout/TopMenu/TopMenu';
 
 import './AppLayout.scss';
@@ -15,7 +16,9 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       <NavigationMenu />
       <TopMenu />
 
-      <main className="app-layout__content">{children}</main>
+      <main className="app-layout__content">
+        <RouteTransition>{children}</RouteTransition>
+      </main>
     </div>
   );
 };
