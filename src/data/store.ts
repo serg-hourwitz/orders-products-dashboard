@@ -40,3 +40,8 @@ export const createOrderInStore = (order: Omit<Order, 'id'>): Order => {
 
   return newOrder;
 };
+
+export const resetStore = () => {
+  ordersStore = [...initialOrders];
+  productsStore = [...initialProducts];
+};
