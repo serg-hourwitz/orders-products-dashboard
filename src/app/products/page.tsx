@@ -16,7 +16,18 @@ import { useTranslation } from 'react-i18next';
 
 import './ProductsPage.scss';
 
-import { ProductsByTypeChart } from '@/features/dashboard/components/ProductsByTypeChart/ProductsByTypeChart';
+import dynamic from 'next/dynamic';
+
+const ProductsByTypeChart = dynamic(
+  () =>
+    import('@/features/dashboard/components/ProductsByTypeChart/ProductsByTypeChart').then(
+      (module) => module.ProductsByTypeChart,
+    ),
+  {
+    ssr: false,
+    loading: () => <div className="chart-loading">Loading chart...</div>,
+  },
+);
 
 const ProductsPage = () => {
   const dispatch = useAppDispatch();

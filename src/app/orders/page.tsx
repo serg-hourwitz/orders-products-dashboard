@@ -21,7 +21,18 @@ import { useTranslation } from 'react-i18next';
 
 import './OrdersPage.scss';
 
-import { OrdersValueChart } from '@/features/dashboard/components/OrdersValueChart/OrdersValueChart';
+import dynamic from 'next/dynamic';
+
+const OrdersValueChart = dynamic(
+  () =>
+    import('@/features/dashboard/components/OrdersValueChart/OrdersValueChart').then(
+      (module) => module.OrdersValueChart,
+    ),
+  {
+    ssr: false,
+    loading: () => <div className="chart-loading">Loading chart...</div>,
+  },
+);
 
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
