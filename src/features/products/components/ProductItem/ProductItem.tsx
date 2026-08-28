@@ -9,6 +9,8 @@ import { useAppSelector } from '@/store/hooks';
 
 import { selectOrderTitleById } from '../../productsSelectors';
 
+import { useTranslation } from 'react-i18next';
+
 import './ProductItem.scss';
 
 interface ProductItemProps {
@@ -17,6 +19,8 @@ interface ProductItemProps {
 
 export const ProductItem = ({ product }: ProductItemProps) => {
   const orderTitle = useAppSelector(selectOrderTitleById(product.order));
+
+  const { t } = useTranslation();
 
   return (
     <article className="product-item">
@@ -47,12 +51,12 @@ export const ProductItem = ({ product }: ProductItemProps) => {
       </div>
 
       <div className="product-item__type">
-        <span className="product-item__label">Type</span>
+        <span className="product-item__label"> {t('products.type')}</span>
         <strong>{product.type}</strong>
       </div>
 
       <div className="product-item__guarantee">
-        <span className="product-item__label">Guarantee</span>
+        <span className="product-item__label">{t('products.guarantee')}</span>
 
         <span>{formatShortDate(product.guarantee.start)}</span>
 
@@ -60,7 +64,7 @@ export const ProductItem = ({ product }: ProductItemProps) => {
       </div>
 
       <div className="product-item__price">
-        <span className="product-item__label">Price</span>
+        <span className="product-item__label">{t('products.price')}</span>
 
         {product.price.map((price) => (
           <span
@@ -75,7 +79,7 @@ export const ProductItem = ({ product }: ProductItemProps) => {
       </div>
 
       <div className="product-item__order">
-        <span className="product-item__label">Order</span>
+        <span className="product-item__label">{t('products.order')}</span>
         <strong>{orderTitle}</strong>
       </div>
     </article>

@@ -3,21 +3,24 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { useTranslation } from 'react-i18next';
+
 import './NavigationMenu.scss';
 
 const navigationItems = [
   {
     href: '/orders',
-    label: 'Orders',
+    labelKey: 'navigation.orders',
   },
   {
     href: '/products',
-    label: 'Products',
+    labelKey: 'navigation.products',
   },
-];
+] as const;
 
 export const NavigationMenu = () => {
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   return (
     <aside className="navigation-menu">
@@ -26,7 +29,7 @@ export const NavigationMenu = () => {
       </div>
 
       <nav className="navigation-menu__nav">
-        {navigationItems.map(({ href, label }) => {
+        {navigationItems.map(({ href, labelKey }) => {
           const isActive = pathname === href;
 
           return (
@@ -37,7 +40,7 @@ export const NavigationMenu = () => {
                 isActive ? 'navigation-menu__link--active' : ''
               }`}
             >
-              {label}
+              {t(labelKey)}
             </Link>
           );
         })}

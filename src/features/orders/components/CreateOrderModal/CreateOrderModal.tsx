@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { CreateOrderForm } from '../CreateOrderForm/CreateOrderForm';
 
+import { useTranslation } from 'react-i18next';
+
 import './CreateOrderModal.scss';
 
 interface CreateOrderModalProps {
@@ -12,6 +14,8 @@ interface CreateOrderModalProps {
 }
 
 export const CreateOrderModal = ({ open, onClose }: CreateOrderModalProps) => {
+  const { t } = useTranslation();
+
   return (
     <AnimatePresence>
       {open && (
@@ -50,7 +54,7 @@ export const CreateOrderModal = ({ open, onClose }: CreateOrderModalProps) => {
           >
             <div className="create-order-modal__header">
               <h2 id="create-order-title" className="create-order-modal__title">
-                Create order
+                {t('orders.createModal.title')}
               </h2>
 
               <button

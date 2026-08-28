@@ -17,6 +17,8 @@ import { selectProducts } from '@/features/products/productsSelectors';
 
 import { CreateOrderModal } from '@/features/orders/components/CreateOrderModal/CreateOrderModal';
 
+import { useTranslation } from 'react-i18next';
+
 import './OrdersPage.scss';
 
 const OrdersPage = () => {
@@ -29,6 +31,8 @@ const OrdersPage = () => {
   const products = useAppSelector(selectProducts);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (products.length === 0) {
@@ -43,7 +47,7 @@ const OrdersPage = () => {
   if (loading) {
     return (
       <section className="orders-page">
-        <p>Loading orders...</p>
+        <p>{t('orders.loading')}</p>
       </section>
     );
   }
@@ -59,14 +63,14 @@ const OrdersPage = () => {
   return (
     <section className="orders-page">
       <div className="orders-page__header">
-        <h1 className="orders-page__title">Orders</h1>
+        <h1 className="orders-page__title"> {t('orders.title')}</h1>
 
         <button
           type="button"
           className="btn btn-success"
           onClick={() => setIsCreateModalOpen(true)}
         >
-          Add order
+          {t('orders.addOrder')}
         </button>
       </div>
 

@@ -15,6 +15,9 @@ import {
   selectSelectedOrderId,
 } from '../../ordersSelectors';
 
+import { useTranslation } from 'react-i18next';
+
+
 import './OrderItem.scss';
 
 interface OrderItemProps {
@@ -50,6 +53,8 @@ export const OrderItem = ({ order }: OrderItemProps) => {
     dispatch(openDeleteOrderModal(order.id));
   };
 
+  const { t } = useTranslation();
+
   return (
     <article
       className={`order-item ${
@@ -62,7 +67,7 @@ export const OrderItem = ({ order }: OrderItemProps) => {
 
         <div className="order-item__products">
           <strong>{productsCount}</strong>
-          <span>Products</span>
+          <span>{t('orders.products')}</span>
         </div>
 
         <div className="order-item__dates">
@@ -81,7 +86,7 @@ export const OrderItem = ({ order }: OrderItemProps) => {
           aria-label={`Delete ${order.title}`}
           onClick={handleDeleteClick}
         >
-          Delete
+          {t('orders.deleteModal.delete')}
         </button>
       </div>
     </article>

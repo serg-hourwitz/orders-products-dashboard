@@ -10,10 +10,9 @@ import {
 } from '@/features/products/productsSelectors';
 import { fetchProducts } from '@/features/products/productsSlice';
 import { fetchOrders } from '@/features/orders/ordersSlice';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+
+import { useTranslation } from 'react-i18next';
 
 import './ProductsPage.scss';
 
@@ -23,6 +22,8 @@ const ProductsPage = () => {
   const loading = useAppSelector(selectProductsLoading);
   const error = useAppSelector(selectProductsError);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     void dispatch(fetchProducts());
     void dispatch(fetchOrders());
@@ -31,7 +32,7 @@ const ProductsPage = () => {
   if (loading) {
     return (
       <section className="products-page">
-        <p>Loading products...</p>
+        <p>{t('orders.loading')}</p>
       </section>
     );
   }
@@ -47,7 +48,7 @@ const ProductsPage = () => {
   return (
     <section className="products-page">
       <div className="products-page__header">
-        <h1 className="products-page__title">Products</h1>
+        <h1 className="products-page__title"> {t('products.title')}</h1>
 
         <ProductTypeFilter />
       </div>

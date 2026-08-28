@@ -13,6 +13,8 @@ import {
 } from '../../ordersSelectors';
 import { clearSelectedOrder } from '../../ordersSlice';
 
+import { useTranslation } from 'react-i18next';
+
 import './OrderDetails.scss';
 
 interface OrderDetailsProps {
@@ -31,6 +33,9 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
   const handleClose = () => {
     dispatch(clearSelectedOrder());
   };
+
+  const { t } = useTranslation();
+
   return (
     <motion.aside
       className="order-details"
@@ -73,17 +78,23 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
 
       <div className="order-details__summary">
         <div className="order-details__summary-item">
-          <span className="order-details__label">Date</span>
+          <span className="order-details__label">
+            {t('orders.details.date')}
+          </span>
           <strong>{formatLongDate(order.date)}</strong>
         </div>
 
         <div className="order-details__summary-item">
-          <span className="order-details__label">Products</span>
+          <span className="order-details__label">
+            {t('orders.details.products')}
+          </span>
           <strong>{products.length}</strong>
         </div>
 
         <div className="order-details__summary-item">
-          <span className="order-details__label">Total</span>
+          <span className="order-details__label">
+            {t('orders.details.total')}
+          </span>
 
           <div className="order-details__total">
             <span>{formatCurrency(totalUsd, 'USD')}</span>
@@ -93,7 +104,10 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
       </div>
 
       <div className="order-details__products">
-        <h3 className="order-details__products-title">Products</h3>
+        <h3 className="order-details__products-title">
+          {' '}
+          {t('orders.details.products')}
+        </h3>
 
         {products.length > 0 ? (
           <ul className="order-details__products-list">
@@ -115,7 +129,9 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
             ))}
           </ul>
         ) : (
-          <p className="order-details__empty">This order has no products.</p>
+          <p className="order-details__empty">
+            {t('orders.details.noProducts')}
+          </p>
         )}
       </div>
     </motion.aside>

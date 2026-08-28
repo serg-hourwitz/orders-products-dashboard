@@ -14,6 +14,8 @@ import { closeDeleteOrderModal, deleteOrder } from '../../ordersSlice';
 
 import { fetchProducts } from '@/features/products/productsSlice';
 
+import { useTranslation } from 'react-i18next';
+
 import './DeleteOrderModal.scss';
 
 export const DeleteOrderModal = () => {
@@ -40,6 +42,8 @@ export const DeleteOrderModal = () => {
       // Error already stored in Redux.
     }
   };
+
+  const { t } = useTranslation();
 
   return (
     <AnimatePresence>
@@ -79,7 +83,7 @@ export const DeleteOrderModal = () => {
           >
             <div className="delete-order-modal__header">
               <h2 id="delete-order-title" className="delete-order-modal__title">
-                Delete order
+                {t('orders.deleteModal.title')}
               </h2>
 
               <button
@@ -94,11 +98,12 @@ export const DeleteOrderModal = () => {
 
             <div className="delete-order-modal__body">
               <p className="delete-order-modal__message">
-                Are you sure you want to delete <strong>{order.title}</strong>?
+                {t('orders.deleteModal.message')} <strong>{order.title}</strong>
+                ?
               </p>
 
               <p className="delete-order-modal__warning">
-                All products linked to this order will also be removed.
+                {t('orders.deleteModal.warning')}
               </p>
             </div>
 
@@ -108,7 +113,7 @@ export const DeleteOrderModal = () => {
                 className="btn btn-outline-secondary"
                 onClick={handleClose}
               >
-                Cancel
+                {t('orders.deleteModal.cancel')}
               </button>
 
               <button
@@ -117,7 +122,9 @@ export const DeleteOrderModal = () => {
                 disabled={deleting}
                 onClick={handleConfirm}
               >
-                {deleting ? 'Deleting...' : 'Delete'}
+                {deleting
+                  ? t('orders.deleteModal.deleting')
+                  : t('orders.deleteModal.delete')}
               </button>
             </div>
           </motion.div>

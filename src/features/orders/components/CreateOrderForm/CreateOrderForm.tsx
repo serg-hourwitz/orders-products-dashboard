@@ -2,31 +2,39 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { z } from 'zod';
+
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 import { selectOrderCreating } from '../../ordersSelectors';
 import { addOrder } from '../../ordersSlice';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 import './CreateOrderForm.scss';
 
-const createOrderSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(2, 'Title must contain at least 2 characters')
-    .max(80, 'Title must contain no more than 80 characters'),
+const createOrderSchema = (t: TFunction) =>
+  z.object({
+    title: z
+      .string()
+      .trim()
+      .min(2, t('orders.validation.titleMin'))
+      .max(80, t('orders.validation.titleMax')),
 
-  description: z
-    .string()
-    .trim()
-    .min(2, 'Description must contain at least 2 characters')
-    .max(300, 'Description must contain no more than 300 characters'),
+    description: z
+      .string()
+      .trim()
+      .min(2, t('orders.validation.descriptionMin'))
+      .max(300, t('orders.validation.descriptionMax')),
 
-  date: z.string().min(1, 'Date is required'),
-});
+    date: z
+      .string()
+      .min(1, t('orders.validation.dateRequired')),
+  });
 
-type CreateOrderFormValues = z.infer<typeof createOrderSchema>;
+type CreateOrderFormValues = z.infer<
+  ReturnType<typeof createOrderSchema>
+>;
 
 interface CreateOrderFormProps {
   onSuccess?: () => void;
@@ -35,7 +43,11 @@ interface CreateOrderFormProps {
 export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
   const dispatch = useAppDispatch();
 
+  const { t } = useTranslation();
+
   const creating = useAppSelector(selectOrderCreating);
+
+  const schema = createOrderSchema(t);
 
   const {
     register,
@@ -43,7 +55,9 @@ export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
     reset,
     formState: { errors },
   } = useForm<CreateOrderFormValues>({
-    resolver: zodResolver(createOrderSchema),
+    resolver: zodResolver(schema),
+    mode: 'onChange',
+
     defaultValues: {
       title: '',
       description: '',
@@ -64,6 +78,7 @@ export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
       ).unwrap();
 
       reset();
+
       onSuccess?.();
     } catch {
       // Redux already stores request error.
@@ -78,7 +93,7 @@ export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
     >
       <div className="create-order-form__field">
         <label htmlFor="order-title" className="create-order-form__label">
-          Title
+          {t('orders.createModal.titleField')}
         </label>
 
         <input
@@ -95,7 +110,7 @@ export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
 
       <div className="create-order-form__field">
         <label htmlFor="order-description" className="create-order-form__label">
-          Description
+          {t('orders.createModal.description')}
         </label>
 
         <textarea
@@ -112,7 +127,7 @@ export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
 
       <div className="create-order-form__field">
         <label htmlFor="order-date" className="create-order-form__label">
-          Date
+          {t('orders.createModal.date')}
         </label>
 
         <input
@@ -129,7 +144,9 @@ export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
 
       <div className="create-order-form__actions">
         <button type="submit" className="btn btn-success" disabled={creating}>
-          {creating ? 'Creating...' : 'Create order'}
+          {creating
+            ? t('orders.createModal.creating')
+            : t('orders.createModal.create')}
         </button>
       </div>
     </form>

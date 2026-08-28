@@ -8,6 +8,8 @@ import {
 } from '../../productsSelectors';
 import { setSelectedType } from '../../productsSlice';
 
+import { useTranslation } from 'react-i18next';
+
 import './ProductTypeFilter.scss';
 
 export const ProductTypeFilter = () => {
@@ -20,10 +22,12 @@ export const ProductTypeFilter = () => {
     dispatch(setSelectedType(event.target.value));
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="product-type-filter">
       <label htmlFor="product-type" className="product-type-filter__label">
-        Type:
+        {t('products.type')}:
       </label>
 
       <select
@@ -32,7 +36,7 @@ export const ProductTypeFilter = () => {
         value={selectedType}
         onChange={handleChange}
       >
-        <option value="all">All</option>
+        <option value="all"> {t('products.all')}</option>
 
         {productTypes.map((type) => (
           <option key={type} value={type}>

@@ -4,12 +4,18 @@ import { useEffect, useState } from 'react';
 
 import { useActiveSessions } from '@/hooks/useActiveSessions';
 
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher/LanguageSwitcher';
+
+import { useTranslation } from 'react-i18next';
+
 import './TopMenu.scss';
 
 const getCurrentDate = () => new Date();
 
 export const TopMenu = () => {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -44,10 +50,12 @@ export const TopMenu = () => {
   return (
     <header className="top-menu">
       <div className="top-menu__brand">
-        <span className="top-menu__brand-title">Orders & Products</span>
+        <span className="top-menu__brand-title">{t('topMenu.title')}</span>
       </div>
 
       <div className="top-menu__info">
+        <LanguageSwitcher />
+
         <div className="top-menu__datetime">
           <span className="top-menu__date">{formattedDate}</span>
           <span className="top-menu__time">{formattedTime}</span>
@@ -61,7 +69,9 @@ export const TopMenu = () => {
             aria-hidden="true"
           />
 
-          <span className="top-menu__sessions-label">Active sessions</span>
+          <span className="top-menu__sessions-label">
+            {t('topMenu.activeSessions')}
+          </span>
 
           <span className="top-menu__sessions-count">
             {activeSessions ?? '—'}
