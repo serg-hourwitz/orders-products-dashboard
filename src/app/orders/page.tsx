@@ -21,6 +21,8 @@ import { useTranslation } from 'react-i18next';
 
 import './OrdersPage.scss';
 
+import { OrdersValueChart } from '@/features/dashboard/components/OrdersValueChart/OrdersValueChart';
+
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
 
@@ -73,13 +75,13 @@ const OrdersPage = () => {
           {t('orders.addOrder')}
         </button>
       </div>
-
       <OrdersList />
       <DeleteOrderModal />
       <CreateOrderModal
         open={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
       />
+      <OrdersValueChart />
     </section>
   );
 };

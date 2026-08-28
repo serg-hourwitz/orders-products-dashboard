@@ -30,8 +30,7 @@ export const resources = {
         deleteModal: {
           title: 'Delete order',
           message: 'Are you sure you want to delete',
-          warning:
-            'All products linked to this order will also be removed.',
+          warning: 'All products linked to this order will also be removed.',
           cancel: 'Cancel',
           delete: 'Delete',
           deleting: 'Deleting...',
@@ -50,8 +49,7 @@ export const resources = {
         validation: {
           titleMin: 'Title must contain at least 2 characters',
           titleMax: 'Title must contain no more than 80 characters',
-          descriptionMin:
-            'Description must contain at least 2 characters',
+          descriptionMin: 'Description must contain at least 2 characters',
           descriptionMax:
             'Description must contain no more than 300 characters',
           dateRequired: 'Date is required',
@@ -67,6 +65,12 @@ export const resources = {
         order: 'Order',
         noProducts: 'No products found.',
         unknownOrder: 'Unknown order',
+      },
+
+      charts: {
+        productsByType: 'Products by type',
+        products: 'Products',
+        ordersValue: 'Order value',
       },
 
       common: {
@@ -126,10 +130,8 @@ export const resources = {
         validation: {
           titleMin: 'Назва повинна містити щонайменше 2 символи',
           titleMax: 'Назва повинна містити не більше 80 символів',
-          descriptionMin:
-            'Опис повинен містити щонайменше 2 символи',
-          descriptionMax:
-            'Опис повинен містити не більше 300 символів',
+          descriptionMin: 'Опис повинен містити щонайменше 2 символи',
+          descriptionMax: 'Опис повинен містити не більше 300 символів',
           dateRequired: 'Дата є обов’язковою',
         },
       },
@@ -143,6 +145,12 @@ export const resources = {
         order: 'Приход',
         noProducts: 'Продуктів не знайдено.',
         unknownOrder: 'Невідомий приход',
+      },
+
+      charts: {
+        productsByType: 'Продукти за типом',
+        products: 'Продукти',
+        ordersValue: 'Вартість приходів',
       },
 
       common: {

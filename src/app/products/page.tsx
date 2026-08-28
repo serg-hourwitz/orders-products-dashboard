@@ -16,6 +16,8 @@ import { useTranslation } from 'react-i18next';
 
 import './ProductsPage.scss';
 
+import { ProductsByTypeChart } from '@/features/dashboard/components/ProductsByTypeChart/ProductsByTypeChart';
+
 const ProductsPage = () => {
   const dispatch = useAppDispatch();
 
@@ -49,11 +51,10 @@ const ProductsPage = () => {
     <section className="products-page">
       <div className="products-page__header">
         <h1 className="products-page__title"> {t('products.title')}</h1>
-
         <ProductTypeFilter />
       </div>
-
       <ProductsList />
+      <ProductsByTypeChart />
     </section>
   );
 };

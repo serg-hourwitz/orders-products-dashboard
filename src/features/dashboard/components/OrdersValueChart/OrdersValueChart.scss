@@ -1,0 +1,22 @@
+.orders-value-chart {
+  padding: 24px;
+  margin-top: 24px;
+
+  background: #fff;
+  border-radius: 12px;
+
+  box-shadow:
+    0 2px 8px rgb(0 0 0 / 8%);
+
+  &__title {
+    margin-bottom: 24px;
+
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  &__content {
+    width: 100%;
+    min-height: 300px;
+  }
+}
