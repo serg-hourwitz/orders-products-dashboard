@@ -29,7 +29,7 @@ export const NavigationMenu = () => {
         <div className="navigation-menu__avatar">
           <Image
             src="/images/profile/my_photo.jpg"
-            alt="Serhiy Hourvitz"
+            alt="Serhiy Hourwitz"
             fill
             priority
             sizes="112px"
@@ -38,7 +38,7 @@ export const NavigationMenu = () => {
         </div>
 
         <div className="navigation-menu__profile-info">
-          <h2 className="navigation-menu__name">Serhiy Hourvitz</h2>
+          <h2 className="navigation-menu__name">Serhiy Hourwitz</h2>
 
           <p className="navigation-menu__tagline">
             Code <span>•</span> Structure <span>•</span> Experience
