@@ -1,63 +1,110 @@
 // @vitest-environment node
 
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { createAuthenticatedRequest } from '@/test/auth';
+
+vi.mock('@/repositories/productsRepository', () => ({
+  productsRepository: {
+    findAll: vi.fn(),
+  },
+}));
+
+import { productsRepository } from '@/repositories/productsRepository';
 
 import { GET } from './route';
 
-import { resetStore } from '@/data/store';
-import { createAuthenticatedRequest } from '@/test/auth';
-
 describe('/api/products', () => {
   beforeEach(() => {
-    resetStore();
+    vi.clearAllMocks();
   });
 
-  it('returns all products', async () => {
-    const request = await createAuthenticatedRequest(
-      'http://localhost/api/products',
-    );
+  describe('GET', () => {
+    it('returns 401 when the request is not authenticated', async () => {
+      const request = new Request('http://localhost/api/products');
 
-    const response = await GET(request);
+      const response = await GET(request);
+      const body = await response.json();
 
-    expect(response.status).toBe(200);
+      expect(response.status).toBe(401);
+      expect(body).toEqual({
+        message: 'Unauthorized',
+      });
 
-    const data = await response.json();
-
-    expect(Array.isArray(data)).toBe(true);
-    expect(data).toHaveLength(4);
-  });
-
-  it('returns products with expected structure', async () => {
-    const request = await createAuthenticatedRequest(
-      'http://localhost/api/products',
-    );
-
-    const response = await GET(request);
-
-    expect(response.status).toBe(200);
-
-    const data = await response.json();
-
-    expect(data[0]).toMatchObject({
-      id: 1,
-      title: 'Product 1',
-      type: 'Monitors',
-      order: 1,
+      expect(productsRepository.findAll).not.toHaveBeenCalled();
     });
 
-    expect(data[0]).toHaveProperty('price');
-    expect(data[0]).toHaveProperty('guarantee');
-  });
+    it('returns all products for an authenticated user', async () => {
+      const products = [
+        {
+          id: 1,
+          serialNumber: 1234,
+          isNew: true,
+          photo: '/images/products/monitor.jpg',
+          title: 'Product 1',
+          type: 'Monitors',
+          specification: 'Specification 1',
+          guarantee: {
+            start: '2017-06-29 12:09:33',
+            end: '2017-06-29 12:09:33',
+          },
+          price: [
+            {
+              value: 100,
+              symbol: 'USD' as const,
+              isDefault: false,
+            },
+            {
+              value: 2600,
+              symbol: 'UAH' as const,
+              isDefault: true,
+            },
+          ],
+          order: 1,
+          date: '2017-06-29 12:09:33',
+        },
+        {
+          id: 3,
+          serialNumber: 5678,
+          isNew: false,
+          photo: '/images/products/monitor.jpg',
+          title: 'Keyboard Pro',
+          type: 'Keyboards',
+          specification: 'Mechanical keyboard',
+          guarantee: {
+            start: '2017-07-01 10:00:00',
+            end: '2019-07-01 10:00:00',
+          },
+          price: [
+            {
+              value: 75,
+              symbol: 'USD' as const,
+              isDefault: false,
+            },
+            {
+              value: 1950,
+              symbol: 'UAH' as const,
+              isDefault: true,
+            },
+          ],
+          order: 1,
+          date: '2017-07-01 10:00:00',
+        },
+      ];
 
-  it('returns 401 without authentication', async () => {
-    const request = new Request('http://localhost/api/products');
+      vi.mocked(productsRepository.findAll).mockResolvedValue(products);
 
-    const response = await GET(request);
+      const request = await createAuthenticatedRequest(
+        'http://localhost/api/products',
+      );
 
-    expect(response.status).toBe(401);
+      const response = await GET(request);
+      const body = await response.json();
 
-    expect(await response.json()).toEqual({
-      message: 'Unauthorized',
+      expect(response.status).toBe(200);
+      expect(body).toEqual(products);
+
+      expect(productsRepository.findAll).toHaveBeenCalledTimes(1);
     });
   });
 });

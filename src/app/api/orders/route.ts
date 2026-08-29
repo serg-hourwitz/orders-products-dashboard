@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { createOrderInStore, getOrdersStore } from '@/data/store';
-
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { ordersRepository } from '@/repositories/ordersRepository';
 
 interface CreateOrderBody {
   title: string;
@@ -16,17 +15,20 @@ export const GET = async (request: Request) => {
   if (auth.response) {
     return auth.response;
   }
-  return NextResponse.json(getOrdersStore());
+
+  const orders = await ordersRepository.findAll();
+
+  return NextResponse.json(orders);
 };
 
 export const POST = async (request: Request) => {
-  const body = (await request.json()) as Partial<CreateOrderBody>;
-
   const auth = await requireAuth(request);
 
   if (auth.response) {
     return auth.response;
   }
+
+  const body = (await request.json()) as Partial<CreateOrderBody>;
 
   if (typeof body.title !== 'string' || body.title.trim().length < 2) {
     return NextResponse.json(
@@ -67,7 +69,7 @@ export const POST = async (request: Request) => {
     );
   }
 
-  const order = createOrderInStore({
+  const order = await ordersRepository.create({
     title: body.title.trim(),
     description: body.description.trim(),
     date: body.date,

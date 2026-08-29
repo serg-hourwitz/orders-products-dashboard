@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { deleteOrderFromStore } from '@/data/store';
-
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { ordersRepository } from '@/repositories/ordersRepository';
 
 interface RouteParams {
   params: Promise<{
@@ -10,12 +9,16 @@ interface RouteParams {
   }>;
 }
 
-export const DELETE = async (request: Request, { params }: RouteParams) => {
+export const DELETE = async (
+  request: Request,
+  { params }: RouteParams,
+) => {
   const auth = await requireAuth(request);
 
   if (auth.response) {
     return auth.response;
   }
+
   const { id } = await params;
 
   const orderId = Number(id);
@@ -31,7 +34,7 @@ export const DELETE = async (request: Request, { params }: RouteParams) => {
     );
   }
 
-  const deleted = deleteOrderFromStore(orderId);
+  const deleted = await ordersRepository.deleteById(orderId);
 
   if (!deleted) {
     return NextResponse.json(

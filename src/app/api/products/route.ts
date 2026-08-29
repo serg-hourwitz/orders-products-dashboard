@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
 
-import { getProductsStore } from '@/data/store';
-
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { productsRepository } from '@/repositories/productsRepository';
 
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   const auth = await requireAuth(request);
 
   if (auth.response) {
     return auth.response;
   }
-  return NextResponse.json(getProductsStore());
+
+  const products = await productsRepository.findAll();
+
+  return NextResponse.json(products);
 };

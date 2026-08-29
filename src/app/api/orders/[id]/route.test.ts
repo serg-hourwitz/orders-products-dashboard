@@ -1,126 +1,192 @@
 // @vitest-environment node
 
-import { beforeEach, describe, expect, it } from 'vitest';
-
-import { DELETE } from './route';
-
-import { getOrdersStore, getProductsStore, resetStore } from '@/data/store';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createAuthenticatedRequest } from '@/test/auth';
 
-describe('DELETE /api/orders/[id]', () => {
+vi.mock('@/repositories/ordersRepository', () => ({
+  ordersRepository: {
+    deleteById: vi.fn(),
+  },
+}));
+
+import { ordersRepository } from '@/repositories/ordersRepository';
+
+import { DELETE } from './route';
+
+const createParams = (id: string) => ({
+  params: Promise.resolve({
+    id,
+  }),
+});
+
+describe('/api/orders/[id]', () => {
   beforeEach(() => {
-    resetStore();
+    vi.clearAllMocks();
   });
 
-  it('deletes an existing order', async () => {
-    const request = await createAuthenticatedRequest(
-      'http://localhost/api/orders/1',
-      {
-        method: 'DELETE',
-      },
-    );
+  describe('DELETE', () => {
+    it('returns 401 when the request is not authenticated', async () => {
+      const request = new Request(
+        'http://localhost/api/orders/1',
+        {
+          method: 'DELETE',
+        },
+      );
 
-    const response = await DELETE(request, {
-      params: Promise.resolve({
-        id: '1',
-      }),
+      const response = await DELETE(
+        request,
+        createParams('1'),
+      );
+
+      const body = await response.json();
+
+      expect(response.status).toBe(401);
+      expect(body).toEqual({
+        message: 'Unauthorized',
+      });
+
+      expect(
+        ordersRepository.deleteById,
+      ).not.toHaveBeenCalled();
     });
 
-    expect(response.status).toBe(200);
+    it('deletes an existing order', async () => {
+      vi.mocked(
+        ordersRepository.deleteById,
+      ).mockResolvedValue(true);
 
-    const data = await response.json();
+      const request = await createAuthenticatedRequest(
+        'http://localhost/api/orders/1',
+        {
+          method: 'DELETE',
+        },
+      );
 
-    expect(data).toEqual({
-      id: 1,
-      message: 'Order deleted successfully',
+      const response = await DELETE(
+        request,
+        createParams('1'),
+      );
+
+      const body = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(body).toEqual({
+        id: 1,
+        message: 'Order deleted successfully',
+      });
+
+      expect(
+        ordersRepository.deleteById,
+      ).toHaveBeenCalledTimes(1);
+
+      expect(
+        ordersRepository.deleteById,
+      ).toHaveBeenCalledWith(1);
     });
 
-    expect(getOrdersStore().some((order) => order.id === 1)).toBe(false);
-  });
+    it('returns 404 when the order does not exist', async () => {
+      vi.mocked(
+        ordersRepository.deleteById,
+      ).mockResolvedValue(false);
 
-  it('also removes products belonging to deleted order', async () => {
-    const request = await createAuthenticatedRequest(
-      'http://localhost/api/orders/1',
-      {
-        method: 'DELETE',
-      },
-    );
+      const request = await createAuthenticatedRequest(
+        'http://localhost/api/orders/999',
+        {
+          method: 'DELETE',
+        },
+      );
 
-    const response = await DELETE(request, {
-      params: Promise.resolve({
-        id: '1',
-      }),
+      const response = await DELETE(
+        request,
+        createParams('999'),
+      );
+
+      const body = await response.json();
+
+      expect(response.status).toBe(404);
+      expect(body).toEqual({
+        message: 'Order not found',
+      });
+
+      expect(
+        ordersRepository.deleteById,
+      ).toHaveBeenCalledWith(999);
     });
 
-    expect(response.status).toBe(200);
+    it('returns 400 when the order id is not a number', async () => {
+      const request = await createAuthenticatedRequest(
+        'http://localhost/api/orders/invalid',
+        {
+          method: 'DELETE',
+        },
+      );
 
-    expect(getProductsStore().some((product) => product.order === 1)).toBe(
-      false,
-    );
-  });
+      const response = await DELETE(
+        request,
+        createParams('invalid'),
+      );
 
-  it('returns 404 when order does not exist', async () => {
-    const request = await createAuthenticatedRequest(
-      'http://localhost/api/orders/999',
-      {
-        method: 'DELETE',
-      },
-    );
+      const body = await response.json();
 
-    const response = await DELETE(request, {
-      params: Promise.resolve({
-        id: '999',
-      }),
+      expect(response.status).toBe(400);
+      expect(body).toEqual({
+        message: 'Invalid order id',
+      });
+
+      expect(
+        ordersRepository.deleteById,
+      ).not.toHaveBeenCalled();
     });
 
-    expect(response.status).toBe(404);
+    it('returns 400 when the order id is zero', async () => {
+      const request = await createAuthenticatedRequest(
+        'http://localhost/api/orders/0',
+        {
+          method: 'DELETE',
+        },
+      );
 
-    const data = await response.json();
+      const response = await DELETE(
+        request,
+        createParams('0'),
+      );
 
-    expect(data).toEqual({
-      message: 'Order not found',
-    });
-  });
+      const body = await response.json();
 
-  it('returns 400 for invalid order id', async () => {
-    const request = await createAuthenticatedRequest(
-      'http://localhost/api/orders/test',
-      {
-        method: 'DELETE',
-      },
-    );
+      expect(response.status).toBe(400);
+      expect(body).toEqual({
+        message: 'Invalid order id',
+      });
 
-    const response = await DELETE(request, {
-      params: Promise.resolve({
-        id: 'test',
-      }),
-    });
-
-    expect(response.status).toBe(400);
-
-    const data = await response.json();
-
-    expect(data).toEqual({
-      message: 'Invalid order id',
-    });
-  });
-
-  it('returns 401 without authentication', async () => {
-    const request = new Request('http://localhost/api/orders/1', {
-      method: 'DELETE',
+      expect(
+        ordersRepository.deleteById,
+      ).not.toHaveBeenCalled();
     });
 
-    const response = await DELETE(request, {
-      params: Promise.resolve({
-        id: '1',
-      }),
-    });
+    it('returns 400 when the order id is negative', async () => {
+      const request = await createAuthenticatedRequest(
+        'http://localhost/api/orders/-1',
+        {
+          method: 'DELETE',
+        },
+      );
 
-    expect(response.status).toBe(401);
+      const response = await DELETE(
+        request,
+        createParams('-1'),
+      );
 
-    expect(await response.json()).toEqual({
-      message: 'Unauthorized',
+      const body = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(body).toEqual({
+        message: 'Invalid order id',
+      });
+
+      expect(
+        ordersRepository.deleteById,
+      ).not.toHaveBeenCalled();
     });
   });
 });
