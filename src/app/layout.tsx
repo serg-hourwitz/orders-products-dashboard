@@ -24,6 +24,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Orders & Products',
   description: 'Orders and products management dashboard',
+  icons: {
+    icon: '/favicon-v2.ico',
+    shortcut: '/favicon-v2.ico',
+  },
 };
 
 export default function RootLayout({
