@@ -2,18 +2,31 @@ import { NextResponse } from 'next/server';
 
 import { createOrderInStore, getOrdersStore } from '@/data/store';
 
+import { requireAuth } from '@/lib/auth/requireAuth';
+
 interface CreateOrderBody {
   title: string;
   description: string;
   date: string;
 }
 
-export const GET = () => {
+export const GET = async (request: Request) => {
+  const auth = await requireAuth(request);
+
+  if (auth.response) {
+    return auth.response;
+  }
   return NextResponse.json(getOrdersStore());
 };
 
 export const POST = async (request: Request) => {
   const body = (await request.json()) as Partial<CreateOrderBody>;
+
+  const auth = await requireAuth(request);
+
+  if (auth.response) {
+    return auth.response;
+  }
 
   if (typeof body.title !== 'string' || body.title.trim().length < 2) {
     return NextResponse.json(

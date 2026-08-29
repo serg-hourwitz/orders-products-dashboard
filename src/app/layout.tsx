@@ -9,6 +9,8 @@ import { StoreProvider } from '@/store/StoreProvider';
 
 import { I18nProvider } from '@/providers/I18nProvider';
 
+import { AuthInitializer } from '@/features/auth/components/AuthInitializer/AuthInitializer';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -33,9 +35,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <StoreProvider>
-          <I18nProvider>
-            <AppLayout>{children}</AppLayout>
-          </I18nProvider>
+          <AuthInitializer>
+            <I18nProvider>
+              <AppLayout>{children}</AppLayout>
+            </I18nProvider>
+          </AuthInitializer>
         </StoreProvider>
       </body>
     </html>

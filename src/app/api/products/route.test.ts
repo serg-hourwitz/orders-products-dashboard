@@ -1,7 +1,11 @@
+// @vitest-environment node
+
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { GET } from './route';
+
 import { resetStore } from '@/data/store';
+import { createAuthenticatedRequest } from '@/test/auth';
 
 describe('/api/products', () => {
   beforeEach(() => {
@@ -9,7 +13,11 @@ describe('/api/products', () => {
   });
 
   it('returns all products', async () => {
-    const response = await GET();
+    const request = await createAuthenticatedRequest(
+      'http://localhost/api/products',
+    );
+
+    const response = await GET(request);
 
     expect(response.status).toBe(200);
 
@@ -20,7 +28,13 @@ describe('/api/products', () => {
   });
 
   it('returns products with expected structure', async () => {
-    const response = await GET();
+    const request = await createAuthenticatedRequest(
+      'http://localhost/api/products',
+    );
+
+    const response = await GET(request);
+
+    expect(response.status).toBe(200);
 
     const data = await response.json();
 
@@ -33,5 +47,17 @@ describe('/api/products', () => {
 
     expect(data[0]).toHaveProperty('price');
     expect(data[0]).toHaveProperty('guarantee');
+  });
+
+  it('returns 401 without authentication', async () => {
+    const request = new Request('http://localhost/api/products');
+
+    const response = await GET(request);
+
+    expect(response.status).toBe(401);
+
+    expect(await response.json()).toEqual({
+      message: 'Unauthorized',
+    });
   });
 });

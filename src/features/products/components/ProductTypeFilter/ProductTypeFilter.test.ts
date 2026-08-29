@@ -60,6 +60,13 @@ const mockState = {
     deleting: false,
     error: null,
   },
+
+  auth: {
+    user: null,
+    loading: false,
+    initialized: true,
+    error: null,
+  },
 } as RootState;
 
 vi.mock('@/store/hooks', () => ({

@@ -2,16 +2,20 @@ import { NextResponse } from 'next/server';
 
 import { deleteOrderFromStore } from '@/data/store';
 
+import { requireAuth } from '@/lib/auth/requireAuth';
+
 interface RouteParams {
   params: Promise<{
     id: string;
   }>;
 }
 
-export const DELETE = async (
-  _request: Request,
-  { params }: RouteParams,
-) => {
+export const DELETE = async (request: Request, { params }: RouteParams) => {
+  const auth = await requireAuth(request);
+
+  if (auth.response) {
+    return auth.response;
+  }
   const { id } = await params;
 
   const orderId = Number(id);

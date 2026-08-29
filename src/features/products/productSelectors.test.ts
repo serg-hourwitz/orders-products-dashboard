@@ -73,6 +73,13 @@ const state = {
     deleting: false,
     error: null,
   },
+
+  auth: {
+    user: null,
+    loading: false,
+    initialized: true,
+    error: null,
+  },
 } as RootState;
 
 describe('products selectors', () => {

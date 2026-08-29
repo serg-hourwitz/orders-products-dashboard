@@ -73,6 +73,17 @@ export const resources = {
         ordersValue: 'Order value',
       },
 
+      auth: {
+        signIn: 'Sign in',
+        signingIn: 'Signing in...',
+        logout: 'Logout',
+        email: 'Email',
+        password: 'Password',
+        emailRequired: 'Email is required',
+        passwordRequired: 'Password is required',
+        invalidCredentials: 'Invalid email or password',
+      },
+
       common: {
         language: 'Language',
       },
@@ -151,6 +162,17 @@ export const resources = {
         productsByType: 'Продукти за типом',
         products: 'Продукти',
         ordersValue: 'Вартість приходів',
+      },
+
+      auth: {
+        signIn: 'Увійти',
+        signingIn: 'Вхід...',
+        logout: 'Вийти',
+        email: 'Електронна пошта',
+        password: 'Пароль',
+        emailRequired: 'Вкажіть електронну пошту',
+        passwordRequired: 'Вкажіть пароль',
+        invalidCredentials: 'Неправильна електронна пошта або пароль',
       },
 
       common: {

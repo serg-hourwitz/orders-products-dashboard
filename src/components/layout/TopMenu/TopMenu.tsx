@@ -1,12 +1,25 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-import { useActiveSessions } from '@/hooks/useActiveSessions';
+import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher/LanguageSwitcher';
 
-import { useTranslation } from 'react-i18next';
+import {
+  logout,
+} from '@/features/auth/authSlice';
+
+import {
+  selectAuthUser,
+} from '@/features/auth/authSelectors';
+
+import { useActiveSessions } from '@/hooks/useActiveSessions';
+
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/store/hooks';
 
 import './TopMenu.scss';
 
@@ -16,6 +29,13 @@ export const TopMenu = () => {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
 
   const { t } = useTranslation();
+
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const user = useAppSelector(
+    selectAuthUser,
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -43,28 +63,49 @@ export const TopMenu = () => {
       }).format(currentDate)
     : '--:--:--';
 
+  const {
+    count: activeSessions,
+    connected: socketConnected,
+  } = useActiveSessions();
 
-  const { count: activeSessions, connected: socketConnected } =
-    useActiveSessions();
+  const handleLogout = async () => {
+    const result = await dispatch(
+      logout(),
+    );
+
+    if (logout.fulfilled.match(result)) {
+      router.replace('/login');
+      router.refresh();
+    }
+  };
 
   return (
     <header className="top-menu">
       <div className="top-menu__brand">
-        <span className="top-menu__brand-title">{t('topMenu.title')}</span>
+        <span className="top-menu__brand-title">
+          {t('topMenu.title')}
+        </span>
       </div>
 
       <div className="top-menu__info">
         <LanguageSwitcher />
 
         <div className="top-menu__datetime">
-          <span className="top-menu__date">{formattedDate}</span>
-          <span className="top-menu__time">{formattedTime}</span>
+          <span className="top-menu__date">
+            {formattedDate}
+          </span>
+
+          <span className="top-menu__time">
+            {formattedTime}
+          </span>
         </div>
 
         <div className="top-menu__sessions">
           <span
             className={`top-menu__connection ${
-              socketConnected ? 'top-menu__connection--online' : ''
+              socketConnected
+                ? 'top-menu__connection--online'
+                : ''
             }`}
             aria-hidden="true"
           />
@@ -77,7 +118,24 @@ export const TopMenu = () => {
             {activeSessions ?? '—'}
           </span>
         </div>
+
+        {user && (
+          <div className="top-menu__auth">
+            <span className="top-menu__user">
+              {user.name}
+            </span>
+
+            <button
+              type="button"
+              className="btn btn-outline-danger btn-sm"
+              onClick={handleLogout}
+            >
+              {t('auth.logout')}
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
 };
+
