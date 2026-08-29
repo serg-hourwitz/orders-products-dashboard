@@ -28,6 +28,7 @@
     "recharts": "^3.10.1",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
+    "tsx": "^4.23.12",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -42,7 +43,6 @@
     "eslint-config-next": "16.3.3",
     "jsdom": "^29.1.1",
     "sass": "^1.103.1",
-    "tsx": "^4.23.12",
     "typescript": "^5",
     "vitest": "^4.1.11"
   }
