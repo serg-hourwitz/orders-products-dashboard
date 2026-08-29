@@ -39,7 +39,12 @@ export const ProductsByTypeChart = () => {
 
             <Tooltip />
 
-            <Bar dataKey="count" name={t('charts.products')} />
+            <Bar
+              dataKey="count"
+              fill="#7cb342"
+              radius={[6, 6, 0, 0]}
+              name={t('charts.products')}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

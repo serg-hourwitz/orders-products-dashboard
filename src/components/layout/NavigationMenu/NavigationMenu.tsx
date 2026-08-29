@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -24,8 +25,25 @@ export const NavigationMenu = () => {
 
   return (
     <aside className="navigation-menu">
-      <div className="navigation-menu__logo">
-        <span className="navigation-menu__logo-mark">O&P</span>
+      <div className="navigation-menu__profile">
+        <div className="navigation-menu__avatar">
+          <Image
+            src="/images/profile/my_photo.jpg"
+            alt="Serhiy Hourvitz"
+            fill
+            priority
+            sizes="112px"
+            className="navigation-menu__avatar-image"
+          />
+        </div>
+
+        <div className="navigation-menu__profile-info">
+          <h2 className="navigation-menu__name">Serhiy Hourvitz</h2>
+
+          <p className="navigation-menu__tagline">
+            Code <span>•</span> Structure <span>•</span> Experience
+          </p>
+        </div>
       </div>
 
       <nav className="navigation-menu__nav">
