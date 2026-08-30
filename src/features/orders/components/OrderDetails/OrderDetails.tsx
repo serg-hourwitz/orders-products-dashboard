@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { Order } from '@/types/order';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { formatLongDate } from '@/utils/formatDate';
+import { formatLongDate, formatShortDate } from '@/utils/formatDate';
 
 import {
   selectOrderProducts,
@@ -78,11 +78,15 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
 
       <div className="order-details__summary">
         <div className="order-details__summary-item">
-          <span className="order-details__label">
-            {t('orders.details.date')}
-          </span>
-          <strong>{formatLongDate(order.date)}</strong>
-        </div>
+  <span className="order-details__label">
+    {t('orders.details.date')}
+  </span>
+
+  <div className="order-details__date">
+    <strong>{formatShortDate(order.date)}</strong>
+    <span>{formatLongDate(order.date)}</span>
+  </div>
+</div>
 
         <div className="order-details__summary-item">
           <span className="order-details__label">

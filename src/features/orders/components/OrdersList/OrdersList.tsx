@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 import { useAppSelector } from '@/store/hooks';
 
@@ -20,6 +21,20 @@ export const OrdersList = () => {
   const selectedOrderId = useAppSelector(selectSelectedOrderId);
   const selectedOrder = useAppSelector(selectSelectedOrder);
 
+  const [showDetails, setShowDetails] = useState(false);
+
+  useEffect(() => {
+    if (selectedOrder) {
+      const timeout = window.setTimeout(() => {
+        setShowDetails(true);
+      }, 80);
+
+      return () => window.clearTimeout(timeout);
+    }
+
+    setShowDetails(false);
+  }, [selectedOrder]);
+
   return (
     <div className="orders-view">
       <div
@@ -33,11 +48,13 @@ export const OrdersList = () => {
       </div>
 
       <AnimatePresence mode="wait">
-        {selectedOrder && (
-          <OrderDetails
-            key={selectedOrder.id}
-            order={selectedOrder}
-          />
+        {selectedOrder && showDetails && (
+          <div className="orders-details-wrapper">
+            <OrderDetails
+              key={selectedOrder.id}
+              order={selectedOrder}
+            />
+          </div>
         )}
       </AnimatePresence>
     </div>

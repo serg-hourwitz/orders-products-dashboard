@@ -1,8 +1,19 @@
+.order-details {
+  position: relative;
+  z-index: 3;
+
+  min-width: 0;
+  padding: 24px;
+
+  background: #ffffff;
+}
+
 .orders-view {
   display: flex;
   align-items: flex-start;
 
   width: 100%;
+
   overflow: hidden;
 
   gap: 24px;
@@ -10,20 +21,31 @@
 
 .orders-list {
   display: flex;
-  flex: 1;
+  flex: 0 0 100%;
   flex-direction: column;
 
   width: 100%;
+  max-width: 100%;
   min-width: 0;
 
   gap: 12px;
 
   transition:
-    flex 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    flex-basis 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
   &--compact {
-    flex: 0 0 48%;
+    flex-basis: 48%;
     max-width: 48%;
   }
+}
+
+.orders-details-wrapper {
+  position: relative;
+  z-index: 2;
+
+  flex: 1 1 52%;
+  min-width: 0;
+
+  background: #ffffff;
 }
