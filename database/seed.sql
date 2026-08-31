@@ -52,18 +52,18 @@ INSERT INTO products (
 )
 VALUES
   (
-    2,
-    1234,
-    TRUE,
-    '/images/products/monitor.jpg',
-    'Product 2',
-    'Monitors',
-    'Specification 1',
-    '2017-06-29 12:09:33',
-    '2017-06-29 12:09:33',
-    2,
-    '2017-06-29 12:09:33'
-  ),
+  2,
+  1234,
+  TRUE,
+  '/images/products/monitor.jpg',
+  'Product 2',
+  'Monitors',
+  'Specification 1',
+  '2017-06-29 12:09:33',
+  '2019-06-29 12:09:33',
+  2,
+  '2017-06-29 12:09:33'
+),
   (
     4,
     9012,
