@@ -87,6 +87,12 @@ export const resources = {
       common: {
         language: 'Language',
       },
+      notFound: {
+        title: 'Page not found',
+        description:
+          'The page you are looking for does not exist or may have been moved.',
+        backToOrders: 'Back to Orders',
+      },
     },
   },
 
@@ -177,6 +183,13 @@ export const resources = {
 
       common: {
         language: 'Мова',
+      },
+
+      notFound: {
+        title: 'Сторінку не знайдено',
+        description:
+          'Сторінка, яку ви шукаєте, не існує або її було переміщено.',
+        backToOrders: 'Повернутися до замовлень',
       },
     },
   },

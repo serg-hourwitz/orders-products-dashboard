@@ -29,13 +29,28 @@ export const ProductsByTypeChart = () => {
       </h2>
 
       <div className="products-by-type-chart__content">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={data}
+            margin={{
+              top: 8,
+              right: 8,
+              left: 0,
+              bottom: 48,
+            }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
 
-            <XAxis dataKey="type" />
+            <XAxis
+              dataKey="type"
+              interval={0}
+              angle={-35}
+              textAnchor="end"
+              height={72}
+              tickMargin={10}
+            />
 
-            <YAxis allowDecimals={false} />
+            <YAxis allowDecimals={false} width={32} />
 
             <Tooltip />
 

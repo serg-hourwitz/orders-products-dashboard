@@ -1,5 +1,6 @@
 .order-item {
   width: 100%;
+  min-width: 0;
 
   background: #ffffff;
   border: 1px solid #e2e8ec;
@@ -22,24 +23,32 @@
     border-color: #8bc34a;
   }
 
-    &__main {
-      display: grid;
-      grid-template-columns:
-        minmax(120px, 1.5fr) minmax(70px, 0.8fr) minmax(120px, 1fr) minmax(110px, 1fr) auto;
-      align-items: center;
+  &__main {
+    display: grid;
+    grid-template-columns:
+      minmax(120px, 1.5fr) minmax(70px, 0.8fr) minmax(120px, 1fr) minmax(110px, 1fr) auto;
+    align-items: center;
 
-      min-height: 88px;
-      padding: 16px 20px;
+    min-width: 0;
+    min-height: 88px;
 
-      gap: 16px;
-    }
+    padding: 16px 20px;
+
+    gap: 16px;
+  }
 
   &__title {
+    min-width: 0;
     margin: 0;
+
+    overflow: hidden;
 
     font-size: 16px;
     font-weight: 500;
     color: #37474f;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__products,
@@ -47,6 +56,8 @@
   &__price {
     display: flex;
     flex-direction: column;
+
+    min-width: 0;
 
     font-size: 14px;
     color: #78909c;
@@ -62,16 +73,153 @@
   }
 }
 
-.orders-list--compact {
+/* Desktop split view */
+@media (min-width: 1200px) {
+  .orders-list--compact {
+    .order-item {
+      &__main {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      &__products,
+      &__dates,
+      &__price {
+        display: none;
+      }
+    }
+  }
+}
+
+/* Compact desktop / tablet */
+@media (max-width: 1199px) {
   .order-item {
     &__main {
-      grid-template-columns: 1fr auto;
+      grid-template-columns:
+        minmax(0, 1.4fr) minmax(90px, 0.7fr) minmax(130px, 1fr) auto;
+
+      grid-template-areas:
+        'title products dates delete'
+        'title price price delete';
+
+      gap: 10px 16px;
+    }
+
+    &__title {
+      grid-area: title;
+    }
+
+    &__products {
+      grid-area: products;
+    }
+
+    &__dates {
+      grid-area: dates;
+    }
+
+    &__price {
+      grid-area: price;
+
+      flex-direction: row;
+
+      gap: 12px;
+    }
+
+    &__delete {
+      grid-area: delete;
+
+      align-self: center;
+    }
+  }
+
+  /*
+   * selected order must NOT collapse on tablet,
+   * because details is now an overlay.
+   */
+  .orders-list--compact {
+    .order-item {
+
+      &__products,
+      &__dates,
+      &__price {
+        display: flex;
+      }
+    }
+  }
+}
+
+/* Tablet */
+@media (max-width: 767px) {
+  .order-item {
+    &__main {
+      grid-template-columns: minmax(0, 1fr) auto;
+
+      grid-template-areas:
+        'title delete'
+        'products dates'
+        'price price';
+
+      min-height: auto;
+
+      padding: 14px 16px;
+
+      gap: 12px 16px;
+    }
+
+    &__title {
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
     &__products,
     &__dates,
     &__price {
-      display: none;
+      padding-top: 10px;
+
+      border-top: 1px solid #eef2f4;
+    }
+
+    &__price {
+      flex-direction: row;
+      justify-content: flex-start;
+
+      gap: 16px;
+    }
+  }
+}
+
+/* Narrow mobile */
+@media (max-width: 560px) {
+  .order-item {
+    &__main {
+      grid-template-columns: 1fr;
+
+      grid-template-areas:
+        'title'
+        'products'
+        'dates'
+        'price'
+        'delete';
+
+      padding: 14px;
+
+      gap: 10px;
+    }
+
+    &__products,
+    &__dates,
+    &__price {
+      padding-top: 8px;
+    }
+
+    &__price {
+      flex-direction: column;
+
+      gap: 2px;
+    }
+
+    &__delete {
+      width: 100%;
+      margin-top: 4px;
     }
   }
 }

@@ -1,18 +1,11 @@
-.order-details {
-  position: relative;
-  z-index: 3;
-
-  min-width: 0;
-  padding: 24px;
-
-  background: #ffffff;
-}
-
 .orders-view {
+  position: relative;
+
   display: flex;
   align-items: flex-start;
 
   width: 100%;
+  min-width: 0;
 
   overflow: hidden;
 
@@ -45,7 +38,47 @@
   z-index: 2;
 
   flex: 1 1 52%;
+
   min-width: 0;
 
   background: #ffffff;
+}
+
+/*
+ * Tablet / compact desktop:
+ * OrderDetails becomes an overlay instead of squeezing the list.
+ */
+@media (max-width: 1199px) {
+  .orders-view {
+    display: block;
+
+    overflow: visible;
+  }
+
+  .orders-list {
+    width: 100%;
+    max-width: 100%;
+
+    &--compact {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .orders-details-wrapper {
+    position: absolute;
+    z-index: 20;
+
+    top: 0;
+    right: 0;
+    left: 0;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 100%;
+
+    background: #ffffff;
+
+    pointer-events: auto;
+  }
 }
