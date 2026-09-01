@@ -1,20 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { login } from '@/features/auth/authSlice';
-
 import {
   selectAuthError,
   selectAuthLoading,
-  selectAuthUser,
 } from '@/features/auth/authSelectors';
-
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-
-import { useTranslation } from 'react-i18next';
 
 interface LoginFormValues {
   email: string;
@@ -23,13 +18,10 @@ interface LoginFormValues {
 
 export default function LoginPage() {
   const router = useRouter();
-
   const dispatch = useAppDispatch();
-
-  const user = useAppSelector(selectAuthUser);
+  const { t } = useTranslation();
 
   const loading = useAppSelector(selectAuthLoading);
-
   const error = useAppSelector(selectAuthError);
 
   const {
@@ -38,12 +30,6 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginFormValues>();
 
-  useEffect(() => {
-    if (user) {
-      router.replace('/orders');
-    }
-  }, [router, user]);
-
   const onSubmit = async (values: LoginFormValues) => {
     const result = await dispatch(login(values));
 
@@ -51,8 +37,6 @@ export default function LoginPage() {
       router.replace('/orders');
     }
   };
-
-  const { t } = useTranslation();
 
   return (
     <main className="login-page">
@@ -97,7 +81,11 @@ export default function LoginPage() {
           )}
         </div>
 
-        {error && <div className="login-form__error">{t(`auth.${error}`)}</div>}
+        {error && (
+          <div className="login-form__error">
+            {t(`auth.${error}`)}
+          </div>
+        )}
 
         <button
           type="submit"

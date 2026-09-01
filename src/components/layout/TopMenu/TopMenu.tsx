@@ -103,7 +103,6 @@ export const TopMenu = () => {
       setIsMobileMenuOpen(false);
 
       router.replace('/login');
-      router.refresh();
     }
   };
 
