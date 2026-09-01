@@ -1,18 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher/LanguageSwitcher';
 
-import {
-  logout,
-} from '@/features/auth/authSlice';
-
-import {
-  selectAuthUser,
-} from '@/features/auth/authSelectors';
+import { logout } from '@/features/auth/authSlice';
+import { selectAuthUser } from '@/features/auth/authSelectors';
 
 import { useActiveSessions } from '@/hooks/useActiveSessions';
 
@@ -25,17 +21,33 @@ import './TopMenu.scss';
 
 const getCurrentDate = () => new Date();
 
+const navigationItems = [
+  {
+    href: '/orders',
+    labelKey: 'navigation.orders',
+  },
+  {
+    href: '/products',
+    labelKey: 'navigation.products',
+  },
+] as const;
+
 export const TopMenu = () => {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { t } = useTranslation();
 
+  const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const user = useAppSelector(
-    selectAuthUser,
-  );
+  const user = useAppSelector(selectAuthUser);
+
+  const {
+    count: activeSessions,
+    connected: socketConnected,
+  } = useActiveSessions();
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -46,6 +58,27 @@ export const TopMenu = () => {
       window.clearInterval(timer);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobileMenuOpen]);
 
   const formattedDate = currentDate
     ? new Intl.DateTimeFormat('en-GB', {
@@ -63,79 +96,207 @@ export const TopMenu = () => {
       }).format(currentDate)
     : '--:--:--';
 
-  const {
-    count: activeSessions,
-    connected: socketConnected,
-  } = useActiveSessions();
-
   const handleLogout = async () => {
-    const result = await dispatch(
-      logout(),
-    );
+    const result = await dispatch(logout());
 
     if (logout.fulfilled.match(result)) {
+      setIsMobileMenuOpen(false);
+
       router.replace('/login');
       router.refresh();
     }
   };
 
+  const handleToggleMobileMenu = () => {
+    setIsMobileMenuOpen((currentValue) => !currentValue);
+  };
+
+  const handleCloseMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <header className="top-menu">
-      <div className="top-menu__brand">
-        <span className="top-menu__brand-title">
-          {t('topMenu.title')}
-        </span>
-      </div>
-
-      <div className="top-menu__info">
-        <LanguageSwitcher />
-
-        <div className="top-menu__datetime">
-          <span className="top-menu__date">
-            {formattedDate}
-          </span>
-
-          <span className="top-menu__time">
-            {formattedTime}
+    <>
+      <header className="top-menu">
+        <div className="top-menu__brand">
+          <span className="top-menu__brand-title">
+            {t('topMenu.title')}
           </span>
         </div>
 
-        <div className="top-menu__sessions">
-          <span
-            className={`top-menu__connection ${
-              socketConnected
-                ? 'top-menu__connection--online'
-                : ''
-            }`}
-            aria-hidden="true"
-          />
+        <div className="top-menu__info">
+          <LanguageSwitcher />
 
-          <span className="top-menu__sessions-label">
-            {t('topMenu.activeSessions')}
-          </span>
-
-          <span className="top-menu__sessions-count">
-            {activeSessions ?? '—'}
-          </span>
-        </div>
-
-        {user && (
-          <div className="top-menu__auth">
-            <span className="top-menu__user">
-              {user.name}
+          <div className="top-menu__datetime">
+            <span className="top-menu__date">
+              {formattedDate}
             </span>
+
+            <span className="top-menu__time">
+              {formattedTime}
+            </span>
+          </div>
+
+          <div className="top-menu__sessions">
+            <span
+              className={`top-menu__connection ${
+                socketConnected
+                  ? 'top-menu__connection--online'
+                  : ''
+              }`}
+              aria-hidden="true"
+            />
+
+            <span className="top-menu__sessions-label">
+              {t('topMenu.activeSessions')}
+            </span>
+
+            <span className="top-menu__sessions-count">
+              {activeSessions ?? '—'}
+            </span>
+          </div>
+
+          {user && (
+            <div className="top-menu__auth">
+              <span className="top-menu__user">
+                {user.name}
+              </span>
+
+              <button
+                type="button"
+                className="btn btn-outline-danger btn-sm"
+                onClick={handleLogout}
+              >
+                {t('auth.logout')}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <button
+          type="button"
+          className={`top-menu__burger ${
+            isMobileMenuOpen ? 'top-menu__burger--open' : ''
+          }`}
+          aria-label={
+            isMobileMenuOpen
+              ? 'Close navigation menu'
+              : 'Open navigation menu'
+          }
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-navigation"
+          onClick={handleToggleMobileMenu}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </header>
+
+      <div
+        className={`mobile-menu ${
+          isMobileMenuOpen ? 'mobile-menu--open' : ''
+        }`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        <button
+          type="button"
+          className="mobile-menu__backdrop"
+          aria-label="Close navigation menu"
+          tabIndex={isMobileMenuOpen ? 0 : -1}
+          onClick={handleCloseMobileMenu}
+        />
+
+        <aside
+          id="mobile-navigation"
+          className="mobile-menu__drawer"
+        >
+          <div className="mobile-menu__header">
+            <strong>{t('topMenu.title')}</strong>
 
             <button
               type="button"
-              className="btn btn-outline-danger btn-sm"
-              onClick={handleLogout}
+              className="mobile-menu__close"
+              aria-label="Close navigation menu"
+              onClick={handleCloseMobileMenu}
             >
-              {t('auth.logout')}
+              ×
             </button>
           </div>
-        )}
+
+          <nav className="mobile-menu__nav">
+            {navigationItems.map(({ href, labelKey }) => {
+              const isActive = pathname === href;
+
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`mobile-menu__link ${
+                    isActive ? 'mobile-menu__link--active' : ''
+                  }`}
+                  onClick={handleCloseMobileMenu}
+                >
+                  {t(labelKey)}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="mobile-menu__section">
+            <span className="mobile-menu__label">
+              Language
+            </span>
+
+            <LanguageSwitcher />
+          </div>
+
+          <div className="mobile-menu__section">
+            <span className="mobile-menu__label">
+              {formattedDate}
+            </span>
+
+            <strong>{formattedTime}</strong>
+          </div>
+
+          <div className="mobile-menu__section">
+            <div className="mobile-menu__sessions">
+              <span
+                className={`top-menu__connection ${
+                  socketConnected
+                    ? 'top-menu__connection--online'
+                    : ''
+                }`}
+                aria-hidden="true"
+              />
+
+              <span>
+                {t('topMenu.activeSessions')}
+              </span>
+
+              <strong>
+                {activeSessions ?? '—'}
+              </strong>
+            </div>
+          </div>
+
+          {user && (
+            <div className="mobile-menu__auth">
+              <span className="mobile-menu__user">
+                {user.name}
+              </span>
+
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={handleLogout}
+              >
+                {t('auth.logout')}
+              </button>
+            </div>
+          )}
+        </aside>
       </div>
-    </header>
+    </>
   );
 };
-
