@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +16,6 @@ interface LoginFormValues {
 }
 
 export default function LoginPage() {
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
@@ -34,7 +32,7 @@ export default function LoginPage() {
     const result = await dispatch(login(values));
 
     if (login.fulfilled.match(result)) {
-      router.replace('/orders');
+      window.location.replace('/orders');
     }
   };
 

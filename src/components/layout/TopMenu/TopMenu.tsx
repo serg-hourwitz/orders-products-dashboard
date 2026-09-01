@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher/LanguageSwitcher';
@@ -39,7 +39,6 @@ export const TopMenu = () => {
   const { t } = useTranslation();
 
   const pathname = usePathname();
-  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const user = useAppSelector(selectAuthUser);
@@ -102,7 +101,7 @@ export const TopMenu = () => {
     if (logout.fulfilled.match(result)) {
       setIsMobileMenuOpen(false);
 
-      router.replace('/login');
+      window.location.replace('/login');
     }
   };
 
