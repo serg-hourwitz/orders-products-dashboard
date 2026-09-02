@@ -17,12 +17,21 @@ export const getDb = (): Pool => {
     return pool;
   }
 
+  const enableSsl = process.env.DB_SSL === 'true';
+
   pool = mysql.createPool({
     host: requiredEnv('DB_HOST'),
     port: Number(process.env.DB_PORT ?? 3306),
     database: requiredEnv('DB_NAME'),
     user: requiredEnv('DB_USER'),
     password: requiredEnv('DB_PASSWORD'),
+
+    ssl: enableSsl
+      ? {
+          minVersion: 'TLSv1.2',
+        }
+      : undefined,
+
     waitForConnections: true,
     connectionLimit: 10,
     maxIdle: 10,
