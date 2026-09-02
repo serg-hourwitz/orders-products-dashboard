@@ -1,29 +1,107 @@
 # Orders & Products Dashboard
 
-A full-stack SPA dashboard for managing orders and products.
+A full-stack Orders & Products management dashboard built with Next.js, React, TypeScript, Redux Toolkit, MySQL, REST API, JWT authentication, Socket.IO, Docker, internationalization, analytics charts, and automated tests.
 
-The project is built with Next.js, React, TypeScript, Redux Toolkit, MySQL, REST API, JWT authentication, Socket.IO, Docker, internationalization, charts, and automated tests.
+The project demonstrates a production-oriented SPA architecture with persistent data storage, protected routes, real-time browser session tracking, responsive UI, containerization, and cloud deployment.
+
+## Live Demo
+
+The production application is available at:
+
+https://orders-products-dashboard.onrender.com
+
+### Demo Credentials
+
+```text
+Email: admin@example.com
+Password: admin123
+```
+
+### Database Health
+
+Production database health endpoint:
+
+```text
+https://orders-products-dashboard.onrender.com/api/health/db
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok",
+  "database": "connected"
+}
+```
+
+> The application is hosted on Render's free tier. The service may spin down
+> after a period of inactivity, so the first request can take additional time.
 
 ## Features
 
-- Orders list and order details
-- Products list with filtering by product type
-- Order creation with form validation
-- Order deletion with confirmation
-- Persistent data storage in MySQL
-- REST API for orders and products
+### Orders
+
+- Orders list
+- Order details view
+- Product count for each order
+- Order dates in multiple formats
+- Total order prices in USD and UAH
+- Order creation
+- Form validation
+- Order deletion
+- Delete confirmation modal
+- Related products displayed in order details
+- Persistent database storage
+
+### Products
+
+- Products list
+- Product type filtering
+- Product title and type
+- Product guarantee dates
+- Product prices in USD and UAH
+- Related order information
+- Product analytics by type
+
+### Authentication
+
 - JWT-based authentication
+- HTTP-only session cookie
 - Protected application routes
-- Redux Toolkit global state management
-- Real-time active browser sessions counter using Socket.IO
+- Persistent authentication between browser sessions
+- Login and logout flows
+- Server-side route protection
+
+### Real-Time Sessions
+
+- Socket.IO integration
+- Active browser sessions counter
+- Each connected browser tab is tracked as an individual active session
+- Session count updates when tabs connect or disconnect
+
+### User Experience
+
+- Responsive desktop and mobile layouts
+- Mobile navigation drawer
+- Animated UI transitions with Framer Motion
 - English and Ukrainian localization
 - Language preference persistence using Web Storage
-- Animated UI transitions with Framer Motion
-- Analytics charts with lazy loading
-- Responsive UI with mobile navigation
-- Unit and API route tests with Vitest
-- Production Docker configuration
-- MySQL database schema and seed data
+- Analytics charts
+- Lazy-loaded chart components
+- Custom 404 page
+
+### Engineering
+
+- TypeScript
+- Redux Toolkit global state
+- REST API
+- Repository-based database access
+- MySQL persistence
+- Docker and Docker Compose
+- Production Docker image
+- Automated unit and API route tests
+- ESLint
+- Production cloud deployment
 
 ## Tech Stack
 
@@ -48,11 +126,11 @@ The project is built with Next.js, React, TypeScript, Redux Toolkit, MySQL, REST
 
 - Next.js Route Handlers
 - REST API
+- Custom Node.js server
 - MySQL
 - mysql2
 - JWT authentication with `jose`
 - Socket.IO
-- Custom Node.js server
 
 ### Testing
 
@@ -63,432 +141,42 @@ The project is built with Next.js, React, TypeScript, Redux Toolkit, MySQL, REST
 
 ### Infrastructure
 
+Local environment:
+
 - Docker
 - Docker Compose
 - Node.js 22
 - MySQL 8.4
 
-## Requirements
+Production environment:
 
-For the recommended Docker setup, install:
+- Render Web Service
+- Docker
+- TiDB Cloud Starter
+- MySQL-compatible database protocol
+- TLS database connection
 
-- Git
-- Docker Desktop with Docker Compose
+## Architecture
 
-For local development without running the application itself inside Docker, install additionally:
-
-- Node.js 22+
-- npm
-
-## Quick Start with Docker
-
-Clone the repository:
-
-```bash
-git clone <repository-url>
-cd orders-products-dashboard
-```
-
-Create the local environment file from the provided example.
-
-Windows CMD:
-
-```bat
-copy .env.example .env.local
-```
-
-macOS / Linux:
-
-```bash
-cp .env.example .env.local
-```
-
-Build and start the application:
-
-```bash
-docker compose up -d --build
-```
-
-Check the container status:
-
-```bash
-docker compose ps
-```
-
-Expected result:
-
-- application container is running
-- MySQL container is running
-- MySQL reports `healthy`
-
-Open the application:
+The application follows a layered architecture:
 
 ```text
-http://localhost:3000
+UI Components
+      ↓
+Redux / Services
+      ↓
+REST API
+      ↓
+Repositories
+      ↓
+Database
 ```
 
-### Demo Credentials
+Database access is isolated in the repository layer.
 
-```text
-Email: admin@example.com
-Password: admin123
-```
+This keeps API route handlers independent from raw SQL queries, improves separation of concerns, and makes the API layer easier to test.
 
-After successful authentication, the application creates an HTTP-only JWT session cookie.
-
-### Verify the Database Connection
-
-```bash
-curl http://localhost:3000/api/health/db
-```
-
-Expected response:
-
-```json
-{
-  "status": "ok",
-  "database": "connected"
-}
-```
-
-## Environment Variables
-
-The repository contains `.env.example`.
-
-For a local demo setup, copy it to `.env.local`.
-
-Windows CMD:
-
-```bat
-copy .env.example .env.local
-```
-
-macOS / Linux:
-
-```bash
-cp .env.example .env.local
-```
-
-Example configuration:
-
-```env
-JWT_SECRET=orders-products-dashboard-development-secret-change-in-production
-
-DEMO_USER_EMAIL=admin@example.com
-DEMO_USER_PASSWORD=admin123
-
-MYSQL_DATABASE=orders_products
-MYSQL_USER=app_user
-MYSQL_PASSWORD=app_password
-MYSQL_ROOT_PASSWORD=root_password
-
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_NAME=orders_products
-DB_USER=app_user
-DB_PASSWORD=app_password
-```
-
-The provided values are intended only for local development and demo purposes.
-
-For a real deployment, replace:
-
-- `JWT_SECRET`
-- demo user credentials
-- MySQL passwords
-
-Do not commit `.env.local`.
-
-## Docker
-
-Docker Compose starts:
-
-- Next.js application
-- MySQL database
-
-The database is initialized automatically from:
-
-```text
-database/schema.sql
-database/seed.sql
-```
-
-Start the project:
-
-```bash
-docker compose up -d --build
-```
-
-Check running services:
-
-```bash
-docker compose ps
-```
-
-Stop the project:
-
-```bash
-docker compose down
-```
-
-Stop the project and remove the MySQL volume:
-
-```bash
-docker compose down -v
-```
-
-The `-v` option removes persisted database data.
-
-On the next clean startup, the database schema and seed data are recreated automatically from `database/schema.sql` and `database/seed.sql`.
-
-If port `3306` is already used by a local MySQL installation, stop that local service or change the host-side MySQL port in `docker-compose.yml`.
-
-## Local Development
-
-The Next.js application can run directly on the host while MySQL runs in Docker.
-
-Install dependencies:
-
-```bash
-npm ci
-```
-
-Create the environment file.
-
-Windows CMD:
-
-```bat
-copy .env.example .env.local
-```
-
-macOS / Linux:
-
-```bash
-cp .env.example .env.local
-```
-
-For host-based development, keep:
-
-```env
-DB_HOST=127.0.0.1
-DB_PORT=3306
-```
-
-Start MySQL:
-
-```bash
-docker compose up -d mysql
-```
-
-Check MySQL:
-
-```bash
-docker compose ps
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The custom Node.js server starts both Next.js and Socket.IO.
-
-Open:
-
-```text
-http://localhost:3000
-```
-
-## Available Scripts
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-Start the production server:
-
-```bash
-npm run start
-```
-
-Run ESLint:
-
-```bash
-npm run lint
-```
-
-Run tests in watch mode:
-
-```bash
-npm test
-```
-
-Run all tests once:
-
-```bash
-npm run test:run
-```
-
-Run tests with coverage:
-
-```bash
-npm run test:coverage
-```
-
-## Database
-
-The project uses MySQL with the following main tables:
-
-```text
-orders
-  |
-  └── products
-        |
-        └── product_prices
-```
-
-The database schema is located at:
-
-```text
-database/schema.sql
-```
-
-Initial demo data is located at:
-
-```text
-database/seed.sql
-```
-
-The schema uses foreign keys.
-
-Deleting an order automatically deletes related products, and deleting a product automatically deletes related prices through `ON DELETE CASCADE`.
-
-### Database Health Endpoint
-
-```text
-GET /api/health/db
-```
-
-Example:
-
-```bash
-curl http://localhost:3000/api/health/db
-```
-
-Expected response:
-
-```json
-{
-  "status": "ok",
-  "database": "connected"
-}
-```
-
-## REST API
-
-Protected API endpoints require authentication.
-
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `POST` | `/api/auth/login` | Sign in |
-| `GET` | `/api/auth/session` | Get current session |
-| `POST` | `/api/auth/logout` | Sign out |
-| `GET` | `/api/orders` | Get orders |
-| `POST` | `/api/orders` | Create an order |
-| `DELETE` | `/api/orders/:id` | Delete an order |
-| `GET` | `/api/products` | Get products |
-| `GET` | `/api/health/db` | Check database connection |
-
-## Real-Time Sessions
-
-Socket.IO is integrated into the custom Node.js server.
-
-Each connected browser tab creates its own Socket.IO connection.
-
-The application displays the number of active browser sessions in real time.
-
-For example:
-
-```text
-1 browser tab  → 1 active session
-2 browser tabs → 2 active sessions
-3 browser tabs → 3 active sessions
-```
-
-Closing a tab decreases the counter automatically.
-
-Because Socket.IO requires a persistent Node.js server, the project uses `server.ts` instead of relying only on a serverless runtime.
-
-## Internationalization
-
-The interface supports:
-
-- English
-- Ukrainian
-
-The selected language is stored in browser Web Storage and restored after reload.
-
-## Testing
-
-Run the complete test suite:
-
-```bash
-npm run test:run
-```
-
-The test suite covers:
-
-- Redux selectors
-- UI components
-- product filtering
-- order form validation
-- REST API route behavior
-
-API route tests mock the repository layer, so they do not require a live MySQL instance.
-
-Real MySQL integration can be verified through Docker and:
-
-```text
-GET /api/health/db
-```
-
-Current verified test result:
-
-```text
-Test Files  7 passed (7)
-Tests       29 passed (29)
-```
-
-## Code Quality
-
-Run ESLint:
-
-```bash
-npm run lint
-```
-
-Verify the production build:
-
-```bash
-npm run build
-```
-
-Recommended validation sequence:
-
-```bash
-npm run test:run
-npm run lint
-npm run build
-```
+The application uses a custom Node.js server to run Next.js and Socket.IO through the same HTTP server.
 
 ## Project Structure
 
@@ -520,38 +208,85 @@ orders-products-dashboard/
 └── README.md
 ```
 
-## Architecture
+## Requirements
 
-The project follows a layered structure:
+For the recommended Docker setup, install:
 
-```text
-UI Components
-      ↓
-Redux / Services
-      ↓
-REST API
-      ↓
-Repositories
-      ↓
-MySQL
-```
+- Git
+- Docker Desktop with Docker Compose
 
-Database access is isolated in the repository layer.
+For local development with the Next.js application running directly on the host, install additionally:
 
-This keeps API route handlers independent from raw SQL queries and makes them easier to test.
+- Node.js 22+
+- npm
 
-## Clean Repository Verification
+## Quick Start with Docker
 
-A reviewer can verify the project from a clean clone with:
+Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/serg-hourwitz/orders-products-dashboard.git
 cd orders-products-dashboard
 ```
 
-Create the environment file.
+Create the local environment file.
 
-Windows CMD:
+### Windows CMD
+
+```bat
+copy .env.example .env.local
+```
+
+### macOS / Linux
+
+```bash
+cp .env.example .env.local
+```
+
+Build and start the complete application:
+
+```bash
+docker compose up -d --build
+```
+
+Check the containers:
+
+```bash
+docker compose ps
+```
+
+Expected result:
+
+- application container is running
+- MySQL container is running
+- MySQL reports `healthy`
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+Sign in using:
+
+```text
+Email: admin@example.com
+Password: admin123
+```
+
+## Local Development
+
+The Next.js application can also run directly on the host while MySQL runs in Docker.
+
+Install dependencies:
+
+```bash
+npm ci
+```
+
+Create `.env.local`.
+
+Windows:
 
 ```bat
 copy .env.example .env.local
@@ -563,19 +298,483 @@ macOS / Linux:
 cp .env.example .env.local
 ```
 
+For local development, use:
+
+```env
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_SSL=false
+```
+
+Start only MySQL:
+
+```bash
+docker compose up -d mysql
+```
+
+Check its state:
+
+```bash
+docker compose ps
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+The custom Node.js server starts both Next.js and Socket.IO.
+
+## Environment Variables
+
+The repository contains `.env.example`.
+
+Example local configuration:
+
+```env
+JWT_SECRET=orders-products-dashboard-development-secret-change-in-production
+
+DEMO_USER_EMAIL=admin@example.com
+DEMO_USER_PASSWORD=admin123
+
+MYSQL_DATABASE=orders_products
+MYSQL_USER=app_user
+MYSQL_PASSWORD=app_password
+MYSQL_ROOT_PASSWORD=root_password
+
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=orders_products
+DB_USER=app_user
+DB_PASSWORD=app_password
+DB_SSL=false
+```
+
+`MYSQL_*` variables configure the local MySQL Docker container.
+
+`DB_*` variables configure the application's database connection.
+
+For cloud databases that require TLS:
+
+```env
+DB_SSL=true
+```
+
+Production secrets are configured through the hosting platform and are not stored in the repository.
+
+Never commit `.env.local`, production database passwords, or production JWT secrets.
+
+## Database
+
+The application uses three main tables:
+
+```text
+orders
+  │
+  └── products
+        │
+        └── product_prices
+```
+
+The database schema is located at:
+
+```text
+database/schema.sql
+```
+
+Initial demo data is located at:
+
+```text
+database/seed.sql
+```
+
+The schema uses foreign keys.
+
+Deleting an order automatically deletes its related products. Deleting a product automatically deletes its related prices through `ON DELETE CASCADE`.
+
+### Local Database
+
+The local Docker environment uses:
+
+```text
+MySQL 8.4
+```
+
+Docker initializes the database from:
+
+```text
+database/schema.sql
+database/seed.sql
+```
+
+### Database Health Endpoint
+
+```text
+GET /api/health/db
+```
+
+Local example:
+
+```bash
+curl http://localhost:3000/api/health/db
+```
+
+Production:
+
+```text
+https://orders-products-dashboard.onrender.com/api/health/db
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok",
+  "database": "connected"
+}
+```
+
+## REST API
+
+Protected endpoints require authentication.
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/api/auth/login` | Sign in |
+| `GET` | `/api/auth/session` | Get the current session |
+| `POST` | `/api/auth/logout` | Sign out |
+| `GET` | `/api/orders` | Get orders |
+| `POST` | `/api/orders` | Create an order |
+| `DELETE` | `/api/orders/:id` | Delete an order |
+| `GET` | `/api/products` | Get products |
+| `GET` | `/api/health/db` | Check database connection |
+
+## Authentication
+
+Authentication is implemented using JWT.
+
+After successful login:
+
+1. the server validates the demo credentials
+2. a JWT is created
+3. the token is stored in an HTTP-only cookie
+4. protected routes become accessible
+
+Authentication persists while the session cookie remains valid.
+
+Logging out removes the session and redirects the user to the login page.
+
+Protected application routes include:
+
+```text
+/orders
+/products
+```
+
+## Real-Time Active Sessions
+
+Socket.IO is integrated into the custom Node.js server.
+
+Each connected browser tab creates its own Socket.IO connection.
+
+For example:
+
+```text
+1 browser tab  → 1 active session
+2 browser tabs → 2 active sessions
+3 browser tabs → 3 active sessions
+```
+
+Closing a browser tab disconnects its Socket.IO connection and decreases the active sessions counter after the disconnect is detected by the server.
+
+Because Socket.IO requires a persistent Node.js process, the project uses `server.ts` rather than relying exclusively on a serverless runtime.
+
+## Internationalization
+
+The interface supports:
+
+- English
+- Ukrainian
+
+The selected language is stored in browser Web Storage and restored after reload.
+
+This provides persistent language preferences without requiring a user account setting.
+
+## Analytics
+
+The application includes analytics charts built with Recharts.
+
+Chart components are lazy-loaded to avoid including analytics code in the initial page rendering path unnecessarily.
+
+Product analytics include product distribution by type.
+
+## Responsive Design
+
+The application supports desktop, tablet, and mobile layouts.
+
+Desktop navigation uses a sidebar.
+
+At smaller viewport widths, the sidebar is replaced with a mobile header and navigation drawer.
+
+The mobile menu supports:
+
+- animated opening and closing
+- backdrop closing
+- close button
+- route selection
+- Escape key
+- language switching
+- session information
+- logout
+
+## Docker
+
+Docker Compose runs:
+
+```text
+Next.js / Node.js application
+            +
+        MySQL 8.4
+```
+
 Start the complete stack:
 
 ```bash
 docker compose up -d --build
 ```
 
-Check container state:
+Check services:
 
 ```bash
 docker compose ps
 ```
 
-Check the database:
+Stop the stack:
+
+```bash
+docker compose down
+```
+
+Stop the stack and delete persisted MySQL data:
+
+```bash
+docker compose down -v
+```
+
+The `-v` option removes the MySQL volume.
+
+On the next clean startup, the schema and seed data are initialized again from:
+
+```text
+database/schema.sql
+database/seed.sql
+```
+
+If port `3306` is already occupied by a local MySQL installation, stop the local service or change the host-side MySQL port in `docker-compose.yml`.
+
+## Production Deployment
+
+The production application is deployed as a Docker-based Web Service on Render.
+
+### Application
+
+```text
+Platform: Render
+Service: Web Service
+Runtime: Docker
+Region: Frankfurt (EU Central)
+```
+
+Production URL:
+
+```text
+https://orders-products-dashboard.onrender.com
+```
+
+The production service runs the same custom Node.js server used by the project, allowing Next.js and Socket.IO to operate in the same container.
+
+### Production Database
+
+The production database is hosted on TiDB Cloud Starter.
+
+```text
+Database: TiDB Cloud
+Protocol: MySQL-compatible
+Connection: TLS
+```
+
+The application connects using `mysql2`.
+
+Production database credentials are supplied through Render environment variables and are never stored in source control.
+
+The production database contains the same relational model used by the local MySQL environment:
+
+```text
+orders
+  │
+  └── products
+        │
+        └── product_prices
+```
+
+### WebSocket Deployment
+
+Socket.IO runs through the Render Web Service using the same HTTP server as Next.js.
+
+This allows the active sessions counter to work in the deployed application without requiring a separate WebSocket service.
+
+### Free Tier Note
+
+The production demo uses Render's free compute tier.
+
+The service can spin down after a period of inactivity. As a result, the first request after an idle period can take longer while the application starts.
+
+Subsequent requests operate normally while the service remains active.
+
+## Testing
+
+Run the complete automated test suite:
+
+```bash
+npm run test:run
+```
+
+The tests cover:
+
+- Redux selectors
+- UI components
+- product filtering
+- order form validation
+- order creation behavior
+- REST API routes
+- repository interaction through mocked boundaries
+
+API route tests mock the repository layer, so the automated suite does not require a live MySQL instance.
+
+Database integration can be verified separately using:
+
+```text
+GET /api/health/db
+```
+
+Current verified result:
+
+```text
+Test Files  7 passed (7)
+Tests       29 passed (29)
+```
+
+## Code Quality
+
+Run ESLint:
+
+```bash
+npm run lint
+```
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Recommended final validation:
+
+```bash
+npm run lint
+npm run test:run
+npm run build
+```
+
+## Available Scripts
+
+Development server:
+
+```bash
+npm run dev
+```
+
+Production build:
+
+```bash
+npm run build
+```
+
+Production server:
+
+```bash
+npm run start
+```
+
+ESLint:
+
+```bash
+npm run lint
+```
+
+Tests in watch mode:
+
+```bash
+npm test
+```
+
+Run tests once:
+
+```bash
+npm run test:run
+```
+
+Test coverage:
+
+```bash
+npm run test:coverage
+```
+
+## Clean Repository Verification
+
+A reviewer can reproduce the project from a clean clone.
+
+Clone:
+
+```bash
+git clone https://github.com/serg-hourwitz/orders-products-dashboard.git
+cd orders-products-dashboard
+```
+
+Create the environment file.
+
+Windows:
+
+```bat
+copy .env.example .env.local
+```
+
+macOS / Linux:
+
+```bash
+cp .env.example .env.local
+```
+
+Start the complete Docker environment:
+
+```bash
+docker compose up -d --build
+```
+
+Check containers:
+
+```bash
+docker compose ps
+```
+
+Verify the database:
 
 ```bash
 curl http://localhost:3000/api/health/db
@@ -587,7 +786,7 @@ Open:
 http://localhost:3000
 ```
 
-Login using:
+Login:
 
 ```text
 Email: admin@example.com
@@ -598,7 +797,83 @@ For source-code validation:
 
 ```bash
 npm ci
-npm run test:run
 npm run lint
+npm run test:run
 npm run build
 ```
+
+## Production Verification
+
+A reviewer can test the deployed version without installing the project locally.
+
+Open:
+
+```text
+https://orders-products-dashboard.onrender.com
+```
+
+Login:
+
+```text
+Email: admin@example.com
+Password: admin123
+```
+
+Recommended production checks:
+
+1. Sign in and open Orders.
+2. Open order details.
+3. Create an order.
+4. Reload the page and verify that the order persists.
+5. Delete the created order.
+6. Open Products and test product type filtering.
+7. Switch between English and Ukrainian.
+8. Reload and verify that the selected language persists.
+9. Open the application in another browser tab and verify the active sessions counter.
+10. Test the responsive mobile navigation.
+11. Log out and verify that protected routes redirect to login.
+12. Check the database health endpoint.
+
+## Git Workflow
+
+The project was developed incrementally using Git feature and setup branches with focused commits.
+
+The repository history demonstrates the implementation of the main features, including:
+
+- project configuration
+- Redux state
+- Orders UI
+- Products UI
+- REST API
+- order creation and deletion
+- Socket.IO
+- internationalization
+- automated tests
+- analytics
+- JWT authentication
+- Docker
+- MySQL persistence
+- responsive UI
+- production deployment support
+
+## Summary
+
+Orders & Products Dashboard demonstrates a full-stack React/Next.js application with:
+
+- component-based UI
+- global state management
+- routing
+- REST API
+- persistent relational data
+- authentication
+- real-time WebSocket communication
+- responsive design
+- internationalization
+- Web Storage
+- form validation
+- analytics
+- automated testing
+- Docker
+- cloud deployment
+
+The project can be evaluated either through the live production deployment or reproduced locally using Docker Compose.
