@@ -193,8 +193,6 @@
 
     display: block;
 
-    visibility: hidden;
-
     pointer-events: none;
 
     &__backdrop {
@@ -364,7 +362,6 @@
     }
 
     &--open {
-      visibility: visible;
 
       pointer-events: auto;
 
