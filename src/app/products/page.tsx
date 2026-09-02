@@ -1,10 +1,13 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ProductTypeFilter } from '@/features/products/components/ProductTypeFilter/ProductTypeFilter';
 import { ProductsList } from '@/features/products/components/ProductsList/ProductsList';
 import {
+  selectProducts,
   selectProductsError,
   selectProductsLoading,
 } from '@/features/products/productsSelectors';
@@ -12,11 +15,7 @@ import { fetchProducts } from '@/features/products/productsSlice';
 import { fetchOrders } from '@/features/orders/ordersSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
-import { useTranslation } from 'react-i18next';
-
 import './ProductsPage.scss';
-
-import dynamic from 'next/dynamic';
 
 const ProductsByTypeChart = dynamic(
   () =>
@@ -31,18 +30,21 @@ const ProductsByTypeChart = dynamic(
 
 const ProductsPage = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
+  const products = useAppSelector(selectProducts);
   const loading = useAppSelector(selectProductsLoading);
   const error = useAppSelector(selectProductsError);
 
-  const { t } = useTranslation();
-
   useEffect(() => {
-    void dispatch(fetchProducts());
-    void dispatch(fetchOrders());
-  }, [dispatch]);
+    if (products.length === 0) {
+      void dispatch(fetchProducts());
+    }
 
-  if (loading) {
+    void dispatch(fetchOrders());
+  }, [dispatch, products.length]);
+
+  if (loading && products.length === 0) {
     return (
       <section className="products-page">
         <p>{t('orders.loading')}</p>
@@ -50,7 +52,7 @@ const ProductsPage = () => {
     );
   }
 
-  if (error) {
+  if (error && products.length === 0) {
     return (
       <section className="products-page">
         <p className="text-danger">{error}</p>
@@ -61,10 +63,13 @@ const ProductsPage = () => {
   return (
     <section className="products-page">
       <div className="products-page__header">
-        <h1 className="products-page__title"> {t('products.title')}</h1>
+        <h1 className="products-page__title">{t('products.title')}</h1>
+
         <ProductTypeFilter />
       </div>
+
       <ProductsList />
+
       <ProductsByTypeChart />
     </section>
   );
