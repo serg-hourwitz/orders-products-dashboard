@@ -10,6 +10,8 @@ import {
 } from '@/features/auth/authSelectors';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
+import { Button } from '@/components/ui/Button/Button';
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -79,19 +81,16 @@ export default function LoginPage() {
           )}
         </div>
 
-        {error && (
-          <div className="login-form__error">
-            {t(`auth.${error}`)}
-          </div>
-        )}
+        {error && <div className="login-form__error">{t(`auth.${error}`)}</div>}
 
-        <button
+        <Button
           type="submit"
-          className="btn btn-primary login-form__submit"
-          disabled={loading}
+          variant="primary"
+          className="login-form__submit"
+          isLoading={loading}
         >
           {loading ? t('auth.signingIn') : t('auth.signIn')}
-        </button>
+        </Button>
       </form>
     </main>
   );

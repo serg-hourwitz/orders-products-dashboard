@@ -15,6 +15,8 @@ import { clearSelectedOrder } from '../../ordersSlice';
 
 import { useTranslation } from 'react-i18next';
 
+import { IconButton } from '@/components/ui/IconButton/IconButton';
+
 import './OrderDetails.scss';
 
 interface OrderDetailsProps {
@@ -66,27 +68,26 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
           <p className="order-details__description">{order.description}</p>
         </div>
 
-        <button
-          type="button"
+        <IconButton
           className="order-details__close"
           aria-label="Close order details"
           onClick={handleClose}
         >
           ×
-        </button>
+        </IconButton>
       </header>
 
       <div className="order-details__summary">
         <div className="order-details__summary-item">
-  <span className="order-details__label">
-    {t('orders.details.date')}
-  </span>
+          <span className="order-details__label">
+            {t('orders.details.date')}
+          </span>
 
-  <div className="order-details__date">
-    <strong>{formatShortDate(order.date)}</strong>
-    <span>{formatLongDate(order.date)}</span>
-  </div>
-</div>
+          <div className="order-details__date">
+            <strong>{formatShortDate(order.date)}</strong>
+            <span>{formatLongDate(order.date)}</span>
+          </div>
+        </div>
 
         <div className="order-details__summary-item">
           <span className="order-details__label">

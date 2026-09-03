@@ -22,6 +22,9 @@ import { fetchProducts } from '@/features/products/productsSlice';
 
 import { useTranslation } from 'react-i18next';
 
+import { Button } from '@/components/ui/Button/Button';
+import { IconButton } from '@/components/ui/IconButton/IconButton';
+
 import './DeleteOrderModal.scss';
 
 export const DeleteOrderModal = () => {
@@ -93,14 +96,13 @@ export const DeleteOrderModal = () => {
                 {t('orders.deleteModal.title')}
               </h2>
 
-              <button
-                type="button"
+              <IconButton
                 className="delete-order-modal__close"
                 aria-label="Close delete confirmation"
                 onClick={handleClose}
               >
                 ×
-              </button>
+              </IconButton>
             </div>
 
             <div className="delete-order-modal__body">
@@ -201,24 +203,19 @@ export const DeleteOrderModal = () => {
             </div>
 
             <div className="delete-order-modal__footer">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={handleClose}
-              >
+              <Button variant="outline-secondary" onClick={handleClose}>
                 {t('orders.deleteModal.cancel')}
-              </button>
+              </Button>
 
-              <button
-                type="button"
-                className="btn btn-danger"
-                disabled={deleting}
+              <Button
+                variant="danger"
+                isLoading={deleting}
                 onClick={handleConfirm}
               >
                 {deleting
                   ? t('orders.deleteModal.deleting')
                   : t('orders.deleteModal.delete')}
-              </button>
+              </Button>
             </div>
           </motion.div>
         </motion.div>

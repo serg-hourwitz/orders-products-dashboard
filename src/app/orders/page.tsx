@@ -19,6 +19,8 @@ import { CreateOrderModal } from '@/features/orders/components/CreateOrderModal/
 
 import { useTranslation } from 'react-i18next';
 
+import { Button } from '@/components/ui/Button/Button';
+
 import './OrdersPage.scss';
 
 import dynamic from 'next/dynamic';
@@ -78,13 +80,9 @@ const OrdersPage = () => {
       <div className="orders-page__header">
         <h1 className="orders-page__title"> {t('orders.title')}</h1>
 
-        <button
-          type="button"
-          className="btn btn-success"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
+        <Button variant="success" onClick={() => setIsCreateModalOpen(true)}>
           {t('orders.addOrder')}
-        </button>
+        </Button>
       </div>
       <OrdersList />
       <DeleteOrderModal />

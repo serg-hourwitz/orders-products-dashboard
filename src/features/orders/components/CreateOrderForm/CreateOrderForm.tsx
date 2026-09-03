@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { selectOrderCreating } from '../../ordersSelectors';
 import { addOrder } from '../../ordersSlice';
 
+import { Button } from '@/components/ui/Button/Button';
+
 import './CreateOrderForm.scss';
 
 const createOrderSchema = (t: TFunction) =>
@@ -143,11 +145,9 @@ export const CreateOrderForm = ({ onSuccess }: CreateOrderFormProps) => {
       </div>
 
       <div className="create-order-form__actions">
-        <button type="submit" className="btn btn-success" disabled={creating}>
-          {creating
-            ? t('orders.createModal.creating')
-            : t('orders.createModal.create')}
-        </button>
+        <Button type="submit" variant="success" isLoading={creating}>
+          {creating ? 'Creating...' : 'Create order'}
+        </Button>
       </div>
     </form>
   );

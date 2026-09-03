@@ -6,6 +6,8 @@ import {
   LANGUAGE_STORAGE_KEY,
 } from '@/i18n/config';
 
+import { IconButton } from '@/components/ui/IconButton/IconButton';
+
 import './LanguageSwitcher.scss';
 
 type Language = 'en' | 'uk';
@@ -30,33 +32,28 @@ export const LanguageSwitcher = () => {
     i18n.resolvedLanguage === 'uk' ? 'uk' : 'en';
 
   return (
-    <div
-      className="language-switcher"
-      aria-label="Language selection"
-    >
-      <button
-        type="button"
+    <div className="language-switcher" aria-label="Language selection">
+      <IconButton
         className={`language-switcher__button ${
-          currentLanguage === 'en'
-            ? 'language-switcher__button--active'
-            : ''
+          currentLanguage === 'en' ? 'language-switcher__button--active' : ''
         }`}
+        aria-label="Switch language to English"
+        aria-pressed={currentLanguage === 'en'}
         onClick={() => handleLanguageChange('en')}
       >
         EN
-      </button>
+      </IconButton>
 
-      <button
-        type="button"
+      <IconButton
         className={`language-switcher__button ${
-          currentLanguage === 'uk'
-            ? 'language-switcher__button--active'
-            : ''
+          currentLanguage === 'uk' ? 'language-switcher__button--active' : ''
         }`}
+        aria-label="Switch language to Ukrainian"
+        aria-pressed={currentLanguage === 'uk'}
         onClick={() => handleLanguageChange('uk')}
       >
         UK
-      </button>
+      </IconButton>
     </div>
   );
 };

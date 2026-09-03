@@ -17,6 +17,7 @@ import {
 
 import { useTranslation } from 'react-i18next';
 
+import { Button } from '@/components/ui/Button/Button';
 
 import './OrderItem.scss';
 
@@ -57,9 +58,7 @@ export const OrderItem = ({ order }: OrderItemProps) => {
 
   return (
     <article
-      className={`order-item ${
-        isSelected ? 'order-item--selected' : ''
-      }`}
+      className={`order-item ${isSelected ? 'order-item--selected' : ''}`}
       onClick={handleSelectOrder}
     >
       <div className="order-item__main">
@@ -80,14 +79,14 @@ export const OrderItem = ({ order }: OrderItemProps) => {
           <strong>{formatCurrency(totalUah, 'UAH')}</strong>
         </div>
 
-        <button
-          type="button"
-          className="order-item__delete btn btn-outline-danger"
+        <Button
+          variant="outline-danger"
+          className="order-item__delete"
           aria-label={`Delete ${order.title}`}
           onClick={handleDeleteClick}
         >
           {t('orders.deleteModal.delete')}
-        </button>
+        </Button>
       </div>
     </article>
   );

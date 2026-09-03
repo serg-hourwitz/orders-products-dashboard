@@ -6,6 +6,8 @@ import { CreateOrderForm } from '../CreateOrderForm/CreateOrderForm';
 
 import { useTranslation } from 'react-i18next';
 
+import { IconButton } from '@/components/ui/IconButton/IconButton';
+
 import './CreateOrderModal.scss';
 
 interface CreateOrderModalProps {
@@ -57,14 +59,13 @@ export const CreateOrderModal = ({ open, onClose }: CreateOrderModalProps) => {
                 {t('orders.createModal.title')}
               </h2>
 
-              <button
-                type="button"
+              <IconButton
                 className="create-order-modal__close"
                 aria-label="Close create order form"
                 onClick={onClose}
               >
                 ×
-              </button>
+              </IconButton>
             </div>
 
             <div className="create-order-modal__body">

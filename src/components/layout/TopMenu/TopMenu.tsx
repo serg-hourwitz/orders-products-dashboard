@@ -17,6 +17,9 @@ import {
   useAppSelector,
 } from '@/store/hooks';
 
+import { Button } from '@/components/ui/Button/Button';
+import { IconButton } from '@/components/ui/IconButton/IconButton';
+
 import './TopMenu.scss';
 
 const getCurrentDate = () => new Date();
@@ -117,30 +120,22 @@ export const TopMenu = () => {
     <>
       <header className="top-menu">
         <div className="top-menu__brand">
-          <span className="top-menu__brand-title">
-            {t('topMenu.title')}
-          </span>
+          <span className="top-menu__brand-title">{t('topMenu.title')}</span>
         </div>
 
         <div className="top-menu__info">
           <LanguageSwitcher />
 
           <div className="top-menu__datetime">
-            <span className="top-menu__date">
-              {formattedDate}
-            </span>
+            <span className="top-menu__date">{formattedDate}</span>
 
-            <span className="top-menu__time">
-              {formattedTime}
-            </span>
+            <span className="top-menu__time">{formattedTime}</span>
           </div>
 
           <div className="top-menu__sessions">
             <span
               className={`top-menu__connection ${
-                socketConnected
-                  ? 'top-menu__connection--online'
-                  : ''
+                socketConnected ? 'top-menu__connection--online' : ''
               }`}
               aria-hidden="true"
             />
@@ -156,30 +151,21 @@ export const TopMenu = () => {
 
           {user && (
             <div className="top-menu__auth">
-              <span className="top-menu__user">
-                {user.name}
-              </span>
+              <span className="top-menu__user">{user.name}</span>
 
-              <button
-                type="button"
-                className="btn btn-outline-danger btn-sm"
-                onClick={handleLogout}
-              >
+              <Button variant="outline-danger" size="sm" onClick={handleLogout}>
                 {t('auth.logout')}
-              </button>
+              </Button>
             </div>
           )}
         </div>
 
-        <button
-          type="button"
+        <IconButton
           className={`top-menu__burger ${
             isMobileMenuOpen ? 'top-menu__burger--open' : ''
           }`}
           aria-label={
-            isMobileMenuOpen
-              ? 'Close navigation menu'
-              : 'Open navigation menu'
+            isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
           }
           aria-expanded={isMobileMenuOpen}
           aria-controls="mobile-navigation"
@@ -188,13 +174,11 @@ export const TopMenu = () => {
           <span />
           <span />
           <span />
-        </button>
+        </IconButton>
       </header>
 
       <div
-        className={`mobile-menu ${
-          isMobileMenuOpen ? 'mobile-menu--open' : ''
-        }`}
+        className={`mobile-menu ${isMobileMenuOpen ? 'mobile-menu--open' : ''}`}
         aria-hidden={!isMobileMenuOpen}
       >
         <button
@@ -205,21 +189,17 @@ export const TopMenu = () => {
           onClick={handleCloseMobileMenu}
         />
 
-        <aside
-          id="mobile-navigation"
-          className="mobile-menu__drawer"
-        >
+        <aside id="mobile-navigation" className="mobile-menu__drawer">
           <div className="mobile-menu__header">
             <strong>{t('topMenu.title')}</strong>
 
-            <button
-              type="button"
+            <IconButton
               className="mobile-menu__close"
               aria-label="Close navigation menu"
               onClick={handleCloseMobileMenu}
             >
               ×
-            </button>
+            </IconButton>
           </div>
 
           <nav className="mobile-menu__nav">
@@ -242,17 +222,13 @@ export const TopMenu = () => {
           </nav>
 
           <div className="mobile-menu__section">
-            <span className="mobile-menu__label">
-              Language
-            </span>
+            <span className="mobile-menu__label">Language</span>
 
             <LanguageSwitcher />
           </div>
 
           <div className="mobile-menu__section">
-            <span className="mobile-menu__label">
-              {formattedDate}
-            </span>
+            <span className="mobile-menu__label">{formattedDate}</span>
 
             <strong>{formattedTime}</strong>
           </div>
@@ -261,36 +237,24 @@ export const TopMenu = () => {
             <div className="mobile-menu__sessions">
               <span
                 className={`top-menu__connection ${
-                  socketConnected
-                    ? 'top-menu__connection--online'
-                    : ''
+                  socketConnected ? 'top-menu__connection--online' : ''
                 }`}
                 aria-hidden="true"
               />
 
-              <span>
-                {t('topMenu.activeSessions')}
-              </span>
+              <span>{t('topMenu.activeSessions')}</span>
 
-              <strong>
-                {activeSessions ?? '—'}
-              </strong>
+              <strong>{activeSessions ?? '—'}</strong>
             </div>
           </div>
 
           {user && (
             <div className="mobile-menu__auth">
-              <span className="mobile-menu__user">
-                {user.name}
-              </span>
+              <span className="mobile-menu__user">{user.name}</span>
 
-              <button
-                type="button"
-                className="btn btn-outline-danger"
-                onClick={handleLogout}
-              >
+              <Button variant="outline-danger" onClick={handleLogout}>
                 {t('auth.logout')}
-              </button>
+              </Button>
             </div>
           )}
         </aside>
