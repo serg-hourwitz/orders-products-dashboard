@@ -12,6 +12,7 @@ import {
   selectProductsLoading,
 } from '@/features/products/productsSelectors';
 import { fetchProducts } from '@/features/products/productsSlice';
+import { selectOrders } from '@/features/orders/ordersSelectors';
 import { fetchOrders } from '@/features/orders/ordersSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
@@ -33,6 +34,7 @@ const ProductsPage = () => {
   const { t } = useTranslation();
 
   const products = useAppSelector(selectProducts);
+  const orders = useAppSelector(selectOrders);
   const loading = useAppSelector(selectProductsLoading);
   const error = useAppSelector(selectProductsError);
 
@@ -41,8 +43,10 @@ const ProductsPage = () => {
       void dispatch(fetchProducts());
     }
 
-    void dispatch(fetchOrders());
-  }, [dispatch, products.length]);
+    if (orders.length === 0) {
+      void dispatch(fetchOrders());
+    }
+  }, [dispatch, orders.length, products.length]);
 
   if (loading && products.length === 0) {
     return (
