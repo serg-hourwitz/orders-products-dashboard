@@ -3,6 +3,8 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 
+import type { RootState } from '@/store';
+
 import {
   getSession,
   login as loginRequest,
@@ -34,11 +36,17 @@ export const login = createAsyncThunk(
     loginRequest(payload),
 );
 
-export const loadSession =
-  createAsyncThunk(
-    'auth/loadSession',
-    async () => getSession(),
-  );
+export const loadSession = createAsyncThunk<
+  AuthUser,
+  void,
+  { state: RootState }
+>('auth/loadSession', async () => getSession(), {
+  condition: (_, { getState }) => {
+    const { initialized, loading } = getState().auth;
+
+    return !initialized && !loading;
+  },
+});
 
 export const logout =
   createAsyncThunk(

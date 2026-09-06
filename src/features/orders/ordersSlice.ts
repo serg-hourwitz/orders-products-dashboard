@@ -4,6 +4,8 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
+import type { RootState } from '@/store';
+
 import {
   createOrder,
   getOrders,
@@ -35,14 +37,27 @@ const initialState: OrdersState = {
 export const fetchOrders = createAsyncThunk<
   Order[],
   void,
-  { rejectValue: string }
->('orders/fetchOrders', async (_, { rejectWithValue }) => {
-  try {
-    return await getOrders();
-  } catch {
-    return rejectWithValue('Failed to load orders');
+  {
+    state: RootState;
+    rejectValue: string;
   }
-});
+>(
+  'orders/fetchOrders',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await getOrders();
+    } catch {
+      return rejectWithValue('Failed to load orders');
+    }
+  },
+  {
+    condition: (_, { getState }) => {
+      const { loading } = getState().orders;
+
+      return !loading;
+    },
+  },
+);
 
 export const deleteOrder = createAsyncThunk<
   number,

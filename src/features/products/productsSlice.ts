@@ -4,6 +4,8 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
+import type { RootState } from '@/store';
+
 import { getProducts } from '@/services/productsApi';
 import type { Product } from '@/types/product';
 
@@ -24,14 +26,27 @@ const initialState: ProductsState = {
 export const fetchProducts = createAsyncThunk<
   Product[],
   void,
-  { rejectValue: string }
->('products/fetchProducts', async (_, { rejectWithValue }) => {
-  try {
-    return await getProducts();
-  } catch {
-    return rejectWithValue('Failed to load products');
+  {
+    state: RootState;
+    rejectValue: string;
   }
-});
+>(
+  'products/fetchProducts',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await getProducts();
+    } catch {
+      return rejectWithValue('Failed to load products');
+    }
+  },
+  {
+    condition: (_, { getState }) => {
+      const { loading } = getState().products;
+
+      return !loading;
+    },
+  },
+);
 
 const productsSlice = createSlice({
   name: 'products',
