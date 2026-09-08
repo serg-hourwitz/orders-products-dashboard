@@ -18,7 +18,7 @@ import {
 
 import { closeDeleteOrderModal, deleteOrder } from '../../ordersSlice';
 
-import { fetchProducts } from '@/features/products/productsSlice';
+import { deleteProductsByOrderId } from '@/features/products/productsSlice';
 
 import { useTranslation } from 'react-i18next';
 
@@ -47,7 +47,7 @@ export const DeleteOrderModal = () => {
 
     try {
       await dispatch(deleteOrder(orderId)).unwrap();
-      await dispatch(fetchProducts()).unwrap();
+      dispatch(deleteProductsByOrderId(orderId));
     } catch {
       // Error already stored in Redux.
     }
