@@ -386,7 +386,7 @@ orders
 The database schema is located at:
 
 ```text
-database/schema.sql
+database/schema.sql and can be opened in MySQL Workbench to inspect the implemented database structure and relationships
 ```
 
 Initial demo data is located at:
